@@ -1,0 +1,6 @@
+framework module DatadogSDKBridge {
+  umbrella header "DatadogSDKBridge-umbrella.h"
+
+  export *
+  module * { export * }
+}
