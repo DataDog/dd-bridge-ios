@@ -1,6 +1,0 @@
-framework module DatadogObjc {
-  umbrella header "DatadogSDKObjc-umbrella.h"
-
-  export *
-  module * { export * }
-}

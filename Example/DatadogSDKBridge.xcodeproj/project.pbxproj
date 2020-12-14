@@ -14,22 +14,10 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		607FACEC1AFB9204008FA782 /* Tests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 607FACEB1AFB9204008FA782 /* Tests.swift */; };
 		93235ABFE7817FDB2E5DF3F7 /* Pods_DatadogSDKBridge_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E1CEB343477B07661F303F24 /* Pods_DatadogSDKBridge_Example.framework */; };
-		D94E658CF54FA319C7A296E7 /* Pods_DatadogSDKBridge_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7741FE122F38D0B6FE1277C3 /* Pods_DatadogSDKBridge_Tests.framework */; };
 /* End PBXBuildFile section */
-
-/* Begin PBXContainerItemProxy section */
-		607FACE61AFB9204008FA782 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 607FACC81AFB9204008FA782 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 607FACCF1AFB9204008FA782;
-			remoteInfo = DatadogSDKBridge;
-		};
-/* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
 		001AD446D8E50BD5A662F3A6 /* Pods-DatadogSDKBridge_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Example.debug.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Example/Pods-DatadogSDKBridge_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		056D9FF2C2A9C32B872D1AEE /* Pods-DatadogSDKBridge_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Tests.debug.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		4C8014509DAF98F76E262B95 /* DatadogSDKBridge.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = DatadogSDKBridge.podspec; path = ../DatadogSDKBridge.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		52AB88DCEAC9D16E4CD1DC2F /* Pods-DatadogSDKBridge_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Example.release.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Example/Pods-DatadogSDKBridge_Example.release.xcconfig"; sourceTree = "<group>"; };
 		607FACD01AFB9204008FA782 /* DatadogSDKBridge_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DatadogSDKBridge_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,9 +30,7 @@
 		607FACE51AFB9204008FA782 /* DatadogSDKBridge_Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DatadogSDKBridge_Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		607FACEA1AFB9204008FA782 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		607FACEB1AFB9204008FA782 /* Tests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests.swift; sourceTree = "<group>"; };
-		7741FE122F38D0B6FE1277C3 /* Pods_DatadogSDKBridge_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DatadogSDKBridge_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9EE01CDD06C3DD249DAE567 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		DB73D01A7A8ED2B2E9EB57D9 /* Pods-DatadogSDKBridge_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Tests.release.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		E1CEB343477B07661F303F24 /* Pods_DatadogSDKBridge_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DatadogSDKBridge_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8779BD4DAD6B0ECCD7DDEED /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -62,7 +48,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D94E658CF54FA319C7A296E7 /* Pods_DatadogSDKBridge_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +58,6 @@
 			isa = PBXGroup;
 			children = (
 				E1CEB343477B07661F303F24 /* Pods_DatadogSDKBridge_Example.framework */,
-				7741FE122F38D0B6FE1277C3 /* Pods_DatadogSDKBridge_Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -153,8 +137,6 @@
 			children = (
 				001AD446D8E50BD5A662F3A6 /* Pods-DatadogSDKBridge_Example.debug.xcconfig */,
 				52AB88DCEAC9D16E4CD1DC2F /* Pods-DatadogSDKBridge_Example.release.xcconfig */,
-				056D9FF2C2A9C32B872D1AEE /* Pods-DatadogSDKBridge_Tests.debug.xcconfig */,
-				DB73D01A7A8ED2B2E9EB57D9 /* Pods-DatadogSDKBridge_Tests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -186,7 +168,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 607FACF21AFB9204008FA782 /* Build configuration list for PBXNativeTarget "DatadogSDKBridge_Tests" */;
 			buildPhases = (
-				F0D46F1CD24A98EC7197864E /* [CP] Check Pods Manifest.lock */,
 				607FACE11AFB9204008FA782 /* Sources */,
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
@@ -194,7 +175,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				607FACE71AFB9204008FA782 /* PBXTargetDependency */,
 			);
 			name = DatadogSDKBridge_Tests;
 			productName = Tests;
@@ -218,7 +198,6 @@
 					607FACE41AFB9204008FA782 = {
 						CreatedOnToolsVersion = 6.3.1;
 						LastSwiftMigration = 0900;
-						TestTargetID = 607FACCF1AFB9204008FA782;
 					};
 				};
 			};
@@ -325,28 +304,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n  cd ${SOURCE_ROOT}/..\n  ./tools/lint/run-linter.sh\n  ./tools/license/check-license.sh\nfi\n";
 		};
-		F0D46F1CD24A98EC7197864E /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-DatadogSDKBridge_Tests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -368,14 +325,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		607FACE71AFB9204008FA782 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 607FACCF1AFB9204008FA782 /* DatadogSDKBridge_Example */;
-			targetProxy = 607FACE61AFB9204008FA782 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		607FACD91AFB9204008FA782 /* Main.storyboard */ = {
@@ -528,7 +477,6 @@
 		};
 		607FACF31AFB9204008FA782 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 056D9FF2C2A9C32B872D1AEE /* Pods-DatadogSDKBridge_Tests.debug.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -544,13 +492,11 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatadogSDKBridge_Example.app/DatadogSDKBridge_Example";
 			};
 			name = Debug;
 		};
 		607FACF41AFB9204008FA782 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = DB73D01A7A8ED2B2E9EB57D9 /* Pods-DatadogSDKBridge_Tests.release.xcconfig */;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(PLATFORM_DIR)/Developer/Library/Frameworks",
@@ -562,7 +508,6 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_SWIFT3_OBJC_INFERENCE = Default;
 				SWIFT_VERSION = 4.0;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/DatadogSDKBridge_Example.app/DatadogSDKBridge_Example";
 			};
 			name = Release;
 		};

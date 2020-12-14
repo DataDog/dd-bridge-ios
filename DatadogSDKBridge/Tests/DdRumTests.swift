@@ -4,10 +4,10 @@
  * Copyright 2019-2020 Datadog, Inc.
  */
 
-import Foundation
+import XCTest
 
-@objc
-/// Corresponds to: https://github.com/opentracing/opentracing-objc/blob/master/Pod/Classes/OTSpanContext.h
-public protocol OTSpanContext {
-    func forEachBaggageItem(_ callback: (_ key: String, _ value: String) -> Bool)
+class DdRumTests: XCTestCase {
+    func testItDoesSomething() {
+        // 🐶
+    }
 }

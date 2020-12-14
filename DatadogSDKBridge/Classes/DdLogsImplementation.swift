@@ -7,13 +7,27 @@
 import Foundation
 import DatadogObjc
 
+extension DDLogger: NativeLogger { }
+internal protocol NativeLogger {
+    func debug(_ message: String, attributes: [String: Any])
+    func info(_ message: String, attributes: [String: Any])
+    func warn(_ message: String, attributes: [String: Any])
+    func error(_ message: String, attributes: [String: Any])
+}
+
 public class DdLogsImplementation: DdLogs {
-    private lazy var logger: DDLogger = {
+    private let logger: NativeLogger
+
+    internal init(_ ddLogger: NativeLogger) {
+        self.logger = ddLogger
+    }
+
+    public convenience init() {
         let builder = DDLogger.builder()
         builder.sendNetworkInfo(true)
         builder.printLogsToConsole(true)
-        return builder.build()
-    }()
+        self.init(builder.build())
+    }
 
     public func debug(message: NSString, context: NSDictionary) {
         logger.debug(message as String, attributes: context as? [String: Any] ?? [:])

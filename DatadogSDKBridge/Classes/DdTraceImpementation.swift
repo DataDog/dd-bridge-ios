@@ -8,23 +8,58 @@ import Foundation
 import DatadogObjc
 
 internal class DdTraceImpementation: DdTrace {
-    private lazy var tracer: OTTracer = {
-        return DDTracer.initialize(configuration: DDTracerConfiguration())
-    }()
-    private var spanDictionary = [NSString: OTSpan]()
+    private let tracer: OTTracer
+    private(set) var spanDictionary = [NSString: OTSpan]()
+
+    internal init(_ ddTracer: OTTracer) {
+        self.tracer = ddTracer
+    }
+
+    public convenience init() {
+        self.init(DDTracer.initialize(configuration: DDTracerConfiguration()))
+    }
 
     func startSpan(operation: NSString, timestamp: Int64, context: NSDictionary) -> NSString {
         let id = UUID().uuidString as NSString
-        spanDictionary[id] = tracer.startSpan(operation as String, tags: context)
+        let timeIntervalSince1970: TimeInterval = Double(timestamp) / 1_000
+        let startDate = Date(timeIntervalSince1970: timeIntervalSince1970)
+
+        objc_sync_enter(self)
+        spanDictionary[id] = tracer.startSpan(
+            operation as String,
+            childOf: nil,
+            tags: context,
+            startTime: startDate
+        )
+        objc_sync_exit(self)
+
         return id
     }
 
     func finishSpan(spanId: NSString, timestamp: Int64, context: NSDictionary) {
-        if let span = spanDictionary[spanId] {
+        objc_sync_enter(self)
+        let optionalSpan = spanDictionary.removeValue(forKey: spanId)
+        objc_sync_exit(self)
+        
+        if let span = optionalSpan {
+            set(tags: context, to: span)
             let timestampInSeconds = TimeInterval(timestamp / 1_000)
             span.finishWithTime(Date(timeIntervalSince1970: timestampInSeconds))
+        }
+    }
 
-            spanDictionary[spanId] = nil
+    private func set(tags: NSDictionary, to span: OTSpan) {
+        guard let stringKeyedTags = tags as? [String: Any] else {
+            return
+        }
+        for (key, value) in stringKeyedTags {
+            if let tagNSString = value as? NSString {
+                span.setTag(key, value: tagNSString)
+            } else if let tagNSNumber = value as? NSNumber {
+                span.setTag(key, numberValue: tagNSNumber)
+            } else if let tagBool = value as? Bool {
+                span.setTag(key, boolValue: tagBool)
+            }
         }
     }
 }
