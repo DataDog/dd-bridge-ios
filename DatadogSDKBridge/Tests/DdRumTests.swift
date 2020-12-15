@@ -6,8 +6,6 @@
 
 import XCTest
 
-class DdRumTests: XCTestCase {
-    func testItDoesSomething() {
-        // 🐶
-    }
+internal class DdRumTests: XCTestCase {
+    // TODO: RUMM-917 Add RUM support to DatadogObjc
 }

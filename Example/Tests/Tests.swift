@@ -5,7 +5,6 @@
  */
 
 import XCTest
-import DatadogSDKBridge
 
 class Tests: XCTestCase {
     override func setUp() {

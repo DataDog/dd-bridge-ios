@@ -8,7 +8,7 @@ import XCTest
 @testable import DatadogSDKBridge
 @testable import Datadog
 
-class DdSdkTests: XCTestCase {
+internal class DdSdkTests: XCTestCase {
     private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id")
 
     func testSDKInitialization() {

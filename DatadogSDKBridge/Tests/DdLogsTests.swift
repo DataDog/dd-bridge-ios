@@ -7,17 +7,17 @@
 import XCTest
 @testable import DatadogSDKBridge
 
-class DdLogsTests: XCTestCase {
+internal class DdLogsTests: XCTestCase {
     private let mockNativeLogger = MockNativeLogger()
     private lazy var logger = DdLogsImplementation(mockNativeLogger)
 
     private let testMessage_swift: String = "message"
     private let testMessage_objc: NSString = "message"
     private let validTestAttributes_swift: [String: Any] = ["key1": "value", "key2": 123]
-    private let validTestAttributes_objc: NSDictionary = NSDictionary(
+    private let validTestAttributes_objc = NSDictionary(
         dictionary: ["key1": "value", "key2": 123]
     )
-    private let invalidTestAttributes: NSDictionary = NSDictionary(
+    private let invalidTestAttributes = NSDictionary(
         dictionary: ["key1": "value", 123: "value2"]
     )
 
@@ -112,20 +112,20 @@ private class MockNativeLogger: NativeLogger {
         }
         let kind: Kind
         let message: String
-        let attributes: [String : Any]
+        let attributes: [String: Any]
     }
     private(set) var receivedMethodCalls = [MethodCall]()
 
-    func debug(_ message: String, attributes: [String : Any]) {
+    func debug(_ message: String, attributes: [String: Any]) {
         receivedMethodCalls.append(MethodCall(kind: .debug, message: message, attributes: attributes))
     }
-    func info(_ message: String, attributes: [String : Any]) {
+    func info(_ message: String, attributes: [String: Any]) {
         receivedMethodCalls.append(MethodCall(kind: .info, message: message, attributes: attributes))
     }
-    func warn(_ message: String, attributes: [String : Any]) {
+    func warn(_ message: String, attributes: [String: Any]) {
         receivedMethodCalls.append(MethodCall(kind: .warn, message: message, attributes: attributes))
     }
-    func error(_ message: String, attributes: [String : Any]) {
+    func error(_ message: String, attributes: [String: Any]) {
         receivedMethodCalls.append(MethodCall(kind: .error, message: message, attributes: attributes))
     }
 }

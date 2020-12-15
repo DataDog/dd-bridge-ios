@@ -15,7 +15,7 @@ internal class DdTraceImpementation: DdTrace {
         self.tracer = ddTracer
     }
 
-    public convenience init() {
+    convenience init() {
         self.init(DDTracer.initialize(configuration: DDTracerConfiguration()))
     }
 
@@ -40,7 +40,7 @@ internal class DdTraceImpementation: DdTrace {
         objc_sync_enter(self)
         let optionalSpan = spanDictionary.removeValue(forKey: spanId)
         objc_sync_exit(self)
-        
+
         if let span = optionalSpan {
             set(tags: context, to: span)
             let timestampInSeconds = TimeInterval(timestamp / 1_000)

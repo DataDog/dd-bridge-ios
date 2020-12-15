@@ -8,9 +8,9 @@ import XCTest
 @testable import DatadogSDKBridge
 @testable import DatadogObjc
 
-class DdTraceTests: XCTestCase {
+internal class DdTraceTests: XCTestCase {
     private let mockNativeTracer = MockTracer()
-    private var tracer: DdTraceImpementation!
+    private var tracer: DdTraceImpementation! // swiftlint:disable:this implicitly_unwrapped_optional
 
     override func setUpWithError() throws {
         try super.setUpWithError()
@@ -20,7 +20,7 @@ class DdTraceTests: XCTestCase {
     private let testTags = NSDictionary(
         dictionary: [
             "key_string": NSString("value"),
-            "key_number": NSNumber(integerLiteral: 123),
+            "key_number": (123 as NSNumber),
             "key_bool": true
         ]
     )
@@ -57,7 +57,7 @@ class DdTraceTests: XCTestCase {
         XCTAssertEqual(startedSpan.finishTime, MockSpan.unfinished)
 
         let spanDuration: TimeInterval = 10.0
-        let spanDurationInMiliseconds: Int64 = Int64(spanDuration) * 1_000
+        let spanDurationInMiliseconds = Int64(spanDuration) * 1_000
         let finishTimestampInMiliseconds = timestampInMiliseconds + spanDurationInMiliseconds
         let finishingContext = NSDictionary(dictionary: ["last_key": "last_value"])
         tracer.finishSpan(spanId: spanID, timestamp: finishTimestampInMiliseconds, context: finishingContext)
@@ -111,6 +111,7 @@ private class MockTracer: OTTracer {
         return mockSpan
     }
 
+    // swiftlint:disable unavailable_function
     func startSpan(_ operationName: String) -> OTSpan {
         fatalError("Should not be called")
     }
@@ -129,6 +130,7 @@ private class MockTracer: OTTracer {
     func extractWithFormat(_ format: String, carrier: Any) throws {
         fatalError("Should not be called")
     }
+    // swiftlint:enable unavailable_function
 }
 
 private class MockSpan: OTSpan {
@@ -160,15 +162,16 @@ private class MockSpan: OTSpan {
         self.finishTime = finishTime
     }
 
+    // swiftlint:disable unavailable_function
     var context: OTSpanContext { fatalError("Should not be called") }
     var tracer: OTTracer { fatalError("Should not be called") }
     func setOperationName(_ operationName: String) {
         fatalError("Should not be called")
     }
-    func log(_ fields: [String : NSObject]) {
+    func log(_ fields: [String: NSObject]) {
         fatalError("Should not be called")
     }
-    func log(_ fields: [String : NSObject], timestamp: Date?) {
+    func log(_ fields: [String: NSObject], timestamp: Date?) {
         fatalError("Should not be called")
     }
     func setBaggageItem(_ key: String, value: String) -> OTSpan {
@@ -180,4 +183,5 @@ private class MockSpan: OTSpan {
     func finish() {
         fatalError("Should not be called")
     }
+    // swiftlint:enable unavailable_function
 }

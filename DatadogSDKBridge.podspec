@@ -9,7 +9,7 @@ Pod::Spec.new do |s|
       "Maciek Grzybowski" => "maciek.grzybowski@datadoghq.com",
       "Mert Buran" => "mert.buran@datadoghq.com"
   }
-  s.source           = { :git => 'https://github.com/Datadog/DatadogSDKBridge.git', :tag => s.version.to_s }
+  s.source           = { :git => 'https://github.com/DataDog/dd-bridge-ios.git', :tag => s.version.to_s }
 
   s.homepage     = "https://www.datadoghq.com"
   s.social_media_url   = "https://twitter.com/datadoghq"
