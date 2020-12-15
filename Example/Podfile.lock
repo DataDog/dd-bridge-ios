@@ -1,0 +1,30 @@
+PODS:
+  - DatadogSDK (1.3.1)
+  - DatadogSDKBridge (0.1.0):
+    - DatadogSDKObjc (~> 1.3.1)
+  - DatadogSDKBridge/Tests (0.1.0):
+    - DatadogSDKObjc (~> 1.3.1)
+  - DatadogSDKObjc (1.3.1):
+    - DatadogSDK
+
+DEPENDENCIES:
+  - DatadogSDKBridge (from `../`)
+  - DatadogSDKBridge/Tests (from `../`)
+
+SPEC REPOS:
+  trunk:
+    - DatadogSDK
+    - DatadogSDKObjc
+
+EXTERNAL SOURCES:
+  DatadogSDKBridge:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  DatadogSDK: f3af6d797634189c60c2b5422d0cefc0d62a40fa
+  DatadogSDKBridge: 021ac68826e9362b20283df3b73dd23d6c8d52af
+  DatadogSDKObjc: 4e74664b6b6dbc38458ec7eaa306945887bce593
+
+PODFILE CHECKSUM: a6ed50fc39c319fbdeb5f0d76dbbe7054f30b051
+
+COCOAPODS: 1.10.0
