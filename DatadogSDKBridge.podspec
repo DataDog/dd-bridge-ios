@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
 
   s.ios.deployment_target = '11.0'
   s.source_files = 'DatadogSDKBridge/Classes/**/*'
-  s.dependency 'DatadogSDKObjc', '~> 1.3.1'
+  s.dependency 'DatadogSDKObjc', '~> 1.5.0-alpha1'
 
   s.test_spec 'Tests' do |test_spec|
     test_spec.source_files = 'DatadogSDKBridge/Tests/*.swift'
