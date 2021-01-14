@@ -114,35 +114,35 @@ private class MockNativeRUM: NativeRUM {
     private(set) var calledMethods = [RUMMethod]()
     private(set) var receivedAttributes = [[String: Int64]?]()
 
-    func startView(key: String, path: String?, attributes: [String : Any]) {
+    func startView(key: String, path: String?, attributes: [String: Any]) {
         calledMethods.append(.startView(key: key, path: path))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func stopView(key: String, attributes: [String : Any]) {
+    func stopView(key: String, attributes: [String: Any]) {
         calledMethods.append(.stopView(key: key))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func addError(message: String, source: DDRUMErrorSource, stack: String?, attributes: [String : Any]) {
+    func addError(message: String, source: DDRUMErrorSource, stack: String?, attributes: [String: Any]) {
         calledMethods.append(.addError(message: message, source: source, stack: stack))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func startResourceLoading(resourceKey: String, httpMethod: String, urlString: String, attributes: [String : Any]) {
+    func startResourceLoading(resourceKey: String, httpMethod: String, urlString: String, attributes: [String: Any]) {
         calledMethods.append(.startResourceLoading(resourceKey: resourceKey, httpMethod: httpMethod, urlString: urlString))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceKind, attributes: [String : Any]) {
+    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceKind, attributes: [String: Any]) {
         calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode, kind: kind))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func startUserAction(type: DDRUMUserActionType, name: String, attributes: [String : Any]) {
+    func startUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any]) {
         calledMethods.append(.startUserAction(type: type, name: name))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func stopUserAction(type: DDRUMUserActionType, name: String?, attributes: [String : Any]) {
+    func stopUserAction(type: DDRUMUserActionType, name: String?, attributes: [String: Any]) {
         calledMethods.append(.stopUserAction(type: type, name: name))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func addUserAction(type: DDRUMUserActionType, name: String, attributes: [String : Any]) {
+    func addUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any]) {
         calledMethods.append(.addUserAction(type: type, name: name))
         receivedAttributes.append(attributes as? [String: Int64])
     }

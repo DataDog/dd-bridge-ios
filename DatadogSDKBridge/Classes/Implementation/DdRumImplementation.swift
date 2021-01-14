@@ -12,8 +12,8 @@ internal protocol NativeRUM {
     func startView(key: String, path: String?, attributes: [String: Any])
     func stopView(key: String, attributes: [String: Any])
     func addError(message: String, source: DDRUMErrorSource, stack: String?, attributes: [String: Any])
-    func startResourceLoading(resourceKey: String, httpMethod: String, urlString: String, attributes: [String: Any])
-    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceKind, attributes: [String: Any])
+    func startResourceLoading(resourceKey: String, httpMethod: DDRUMMethod, urlString: String, attributes: [String: Any])
+    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceType, attributes: [String: Any])
     func startUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any])
     func stopUserAction(type: DDRUMUserActionType, name: String?, attributes: [String: Any])
     func addUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any])
@@ -41,7 +41,7 @@ private extension DDRUMErrorSource {
     }
 }
 
-private extension DDRUMResourceKind {
+private extension DDRUMResourceType {
     init(from string: String) {
         switch string {
         case "image": self = .image
@@ -54,6 +54,20 @@ private extension DDRUMResourceKind {
         case "js": self = .js
         case "media": self = .media
         default: self = .other
+        }
+    }
+}
+
+private extension DDRUMMethod {
+    init(from string: String) {
+        switch string.uppercased() {
+        case "POST": self = .post
+        case "GET": self = .get
+        case "HEAD": self = .head
+        case "PUT": self = .put
+        case "DELETE": self = .delete
+        case "PATCH": self = .patch
+        default: self = .get
         }
     }
 }
@@ -100,11 +114,11 @@ internal class DdRumImplementation: DdRum {
     }
 
     func startResource(key: NSString, method: NSString, url: NSString, timestamp: Int64, context: NSDictionary) {
-        nativeRUM.startResourceLoading(resourceKey: key as String, httpMethod: method as String, urlString: url as String, attributes: attributes(from: context, with: timestamp))
+        nativeRUM.startResourceLoading(resourceKey: key as String, httpMethod: DDRUMMethod(from: method as String), urlString: url as String, attributes: attributes(from: context, with: timestamp))
     }
 
     func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestamp: Int64, context: NSDictionary) {
-        nativeRUM.stopResourceLoading(resourceKey: key as String, statusCode: Int(statusCode), kind: DDRUMResourceKind(from: kind as String), attributes: attributes(from: context, with: timestamp))
+        nativeRUM.stopResourceLoading(resourceKey: key as String, statusCode: Int(statusCode), kind: DDRUMResourceType(from: kind as String), attributes: attributes(from: context, with: timestamp))
     }
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestamp: Int64, context: NSDictionary) {
