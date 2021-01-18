@@ -7,6 +7,7 @@
 import XCTest
 @testable import DatadogSDKBridge
 @testable import DatadogObjc
+@testable import Datadog
 
 internal class DdRumTests: XCTestCase {
     private let mockNativeRUM = MockNativeRUM()
@@ -17,6 +18,10 @@ internal class DdRumTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         rum = DdRumImplementation(mockNativeRUM)
+    }
+
+    func testInternalTimestampKeyValue() {
+        XCTAssertEqual(DdRumImplementation.timestampKey, RUMAttribute.internalTimestamp)
     }
 
     func testStartView() {
@@ -75,7 +80,7 @@ internal class DdRumTests: XCTestCase {
         rum.startResource(key: "resource key", method: "put", url: "some/url/string", timestamp: randomTimestamp, context: ["foo": 123])
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .startResourceLoading(resourceKey: "resource key", httpMethod: "put", urlString: "some/url/string"))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .startResourceLoading(resourceKey: "resource key", httpMethod: .put, urlString: "some/url/string"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
         XCTAssertEqual(mockNativeRUM.receivedAttributes.last, ["foo": 123, DdRumImplementation.timestampKey: randomTimestamp])
     }
@@ -104,8 +109,8 @@ private class MockNativeRUM: NativeRUM {
         case startView(key: String, path: String?)
         case stopView(key: String)
         case addError(message: String, source: DDRUMErrorSource, stack: String?)
-        case startResourceLoading(resourceKey: String, httpMethod: String, urlString: String)
-        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceKind)
+        case startResourceLoading(resourceKey: String, httpMethod: DDRUMMethod, urlString: String)
+        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceType)
         case startUserAction(type: DDRUMUserActionType, name: String)
         case stopUserAction(type: DDRUMUserActionType, name: String?)
         case addUserAction(type: DDRUMUserActionType, name: String)
@@ -126,11 +131,11 @@ private class MockNativeRUM: NativeRUM {
         calledMethods.append(.addError(message: message, source: source, stack: stack))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func startResourceLoading(resourceKey: String, httpMethod: String, urlString: String, attributes: [String: Any]) {
+    func startResourceLoading(resourceKey: String, httpMethod: DDRUMMethod, urlString: String, attributes: [String: Any]) {
         calledMethods.append(.startResourceLoading(resourceKey: resourceKey, httpMethod: httpMethod, urlString: urlString))
         receivedAttributes.append(attributes as? [String: Int64])
     }
-    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceKind, attributes: [String: Any]) {
+    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceType, attributes: [String: Any]) {
         calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode, kind: kind))
         receivedAttributes.append(attributes as? [String: Int64])
     }
