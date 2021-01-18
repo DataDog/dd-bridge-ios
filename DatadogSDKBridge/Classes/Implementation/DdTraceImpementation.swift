@@ -16,7 +16,7 @@ internal class DdTraceImpementation: DdTrace {
     }
 
     convenience init() {
-        self.init(DDTracer.initialize(configuration: DDTracerConfiguration()))
+        self.init(DDTracer(configuration: DDTracerConfiguration()))
     }
 
     func startSpan(operation: NSString, timestamp: Int64, context: NSDictionary) -> NSString {

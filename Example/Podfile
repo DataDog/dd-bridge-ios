@@ -3,5 +3,7 @@ use_frameworks!
 platform :ios, '11.0'
 
 target 'DatadogSDKBridge_Example' do
+#  pod 'DatadogSDK', :path => '../../dd-sdk-ios/'
+#  pod 'DatadogSDKObjc', :path => '../../dd-sdk-ios/'
   pod 'DatadogSDKBridge', :path => '../', :testspecs => ['Tests']
 end

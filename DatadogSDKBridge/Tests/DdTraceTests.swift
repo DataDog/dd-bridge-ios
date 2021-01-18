@@ -183,5 +183,8 @@ private class MockSpan: OTSpan {
     func finish() {
         fatalError("Should not be called")
     }
+    func setActive() -> OTSpan {
+        fatalError("Should not be called")
+    }
     // swiftlint:enable unavailable_function
 }

@@ -9,11 +9,21 @@ import DatadogObjc
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
-        let ddConfig = DDConfiguration.builder(
-            clientToken: configuration.clientToken as String,
-            environment: configuration.env as String
-        )
-        .build()
+        let ddConfig: DDConfiguration
+        if let rumAppID = configuration.applicationId as String? {
+            ddConfig = DDConfiguration.builder(
+                rumApplicationID: rumAppID,
+                clientToken: configuration.clientToken as String,
+                environment: configuration.env as String
+            )
+            .build()
+        } else {
+            ddConfig = DDConfiguration.builder(
+                clientToken: configuration.clientToken as String,
+                environment: configuration.env as String
+            )
+            .build()
+        }
         DDDatadog.initialize(appContext: DDAppContext(), configuration: ddConfig)
     }
 }
