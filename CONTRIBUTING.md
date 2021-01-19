@@ -70,7 +70,7 @@ the bug are best.
 ## Have a patch?
 
 We welcome code contributions to the library, which you can 
-[submit as a pull request](https://github.com/DataDog/dd-bridge-ios/pull/new/master).
+[submit as a pull request](https://github.com/DataDog/dd-bridge-ios/pull/new/main).
 Before you submit a PR, make sure that you first create an Issue to explain the
 bug or the feature your patch covers, and make sure another Issue or PR doesn't
 already exist.
@@ -80,8 +80,7 @@ To create a pull request:
 1. **Fork the repository** from https://github.com/DataDog/dd-bridge-ios ;
 2. **Make changes** for your patch;
 3. **Write tests for it**
-4. **Update related parts of the documentation** such as `docs/GettingStarted.md`, especially for
-    new features;
+4. **Update related parts of the documentation**
 5. **Submit your pull request to the upstream**
 
 The pull request will be run through our CI pipeline, and a project member will
@@ -103,7 +102,8 @@ atomic, with a proper commit message. We tend to use
 
 `DatadogSDKBridge` is designed to be called from non-native-iOS platforms, such as ReactNative, etc.
 Although it's written in Swift, it should be as close to ObjC as possible in order to avoid friction.
-As an example; if `DatadogSDKBridge` uses Swift-only types in its API then that type needs to be converted to an ObjC type in all of its callers (e.g: ReactNative, etc.) and this will possibly lead to code duplication in the big picture.
+
+**Example**: If `DatadogSDKBridge` uses Swift-only types in its API then that type needs to be converted to an ObjC type in all of its callers (e.g: ReactNative, etc.) and this will possibly lead to code duplication in the big picture.
 
 ### Conventions
 
