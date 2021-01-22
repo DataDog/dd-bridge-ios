@@ -4,7 +4,7 @@
 
 > A simplified bridge used to support cross-platform mobile frameworks.
 
-This project provides a simplified API to use Datadog features within cross-platform mobile frameworks such as React Native. It follows the mobile bridge API defined in the [dd-mobile-bridge](https://github.com/DataDog/dd-mobile-bridge) repository 
+This project provides a simplified API to use Datadog features within cross-platform mobile frameworks such as React Native. It follows the mobile bridge API defined in the [dd-mobile-bridge](https://github.com/DataDog/dd-mobile-bridge) repository.
 
 ## Installation
 
