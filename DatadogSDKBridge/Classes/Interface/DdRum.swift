@@ -14,40 +14,40 @@ public protocol DdRum {
     /**
        Start tracking a RUM View.
      */
-    func startView(key: NSString, name: NSString, timestamp: Int64, context: NSDictionary)
+    func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Stop tracking a RUM View.
      */
-    func stopView(key: NSString, timestamp: Int64, context: NSDictionary)
+    func stopView(key: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Start tracking a RUM Action.
      */
-    func startAction(type: NSString, name: NSString, timestamp: Int64, context: NSDictionary)
+    func startAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Stop tracking the ongoing RUM Action.
      */
-    func stopAction(timestamp: Int64, context: NSDictionary)
+    func stopAction(timestampMs: Int64, context: NSDictionary)
 
     /**
        Add a RUM Action.
      */
-    func addAction(type: NSString, name: NSString, timestamp: Int64, context: NSDictionary)
+    func addAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Start tracking a RUM Resource.
      */
-    func startResource(key: NSString, method: NSString, url: NSString, timestamp: Int64, context: NSDictionary)
+    func startResource(key: NSString, method: NSString, url: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Stop tracking a RUM Resource.
      */
-    func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestamp: Int64, context: NSDictionary)
+    func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestampMs: Int64, context: NSDictionary)
 
     /**
        Add a RUM Error.
      */
-    func addError(message: NSString, source: NSString, stacktrace: NSString, timestamp: Int64, context: NSDictionary)
+    func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary)
 }

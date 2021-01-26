@@ -19,9 +19,9 @@ internal class DdTraceImpementation: DdTrace {
         self.init(DDTracer(configuration: DDTracerConfiguration()))
     }
 
-    func startSpan(operation: NSString, timestamp: Int64, context: NSDictionary) -> NSString {
+    func startSpan(operation: NSString, timestampMs: Int64, context: NSDictionary) -> NSString {
         let id = UUID().uuidString as NSString
-        let timeIntervalSince1970: TimeInterval = Double(timestamp) / 1_000
+        let timeIntervalSince1970: TimeInterval = Double(timestampMs) / 1_000
         let startDate = Date(timeIntervalSince1970: timeIntervalSince1970)
 
         objc_sync_enter(self)
@@ -36,14 +36,14 @@ internal class DdTraceImpementation: DdTrace {
         return id
     }
 
-    func finishSpan(spanId: NSString, timestamp: Int64, context: NSDictionary) {
+    func finishSpan(spanId: NSString, timestampMs: Int64, context: NSDictionary) {
         objc_sync_enter(self)
         let optionalSpan = spanDictionary.removeValue(forKey: spanId)
         objc_sync_exit(self)
 
         if let span = optionalSpan {
             set(tags: context, to: span)
-            let timestampInSeconds = TimeInterval(timestamp / 1_000)
+            let timestampInSeconds = TimeInterval(timestampMs / 1_000)
             span.finishWithTime(Date(timeIntervalSince1970: timestampInSeconds))
         }
     }
