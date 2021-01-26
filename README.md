@@ -1,29 +1,24 @@
-# DatadogSDKBridge
+**IMPORTANT**: If you're building a native iOS application, please use the [dd-sdk-ios](https://github.com/DataDog/dd-sdk-ios) library instead.
 
-[![CI Status](https://img.shields.io/travis/Mert Buran/DatadogSDKBridge.svg?style=flat)](https://travis-ci.org/Mert Buran/DatadogSDKBridge)
-[![Version](https://img.shields.io/cocoapods/v/DatadogSDKBridge.svg?style=flat)](https://cocoapods.org/pods/DatadogSDKBridge)
-[![License](https://img.shields.io/cocoapods/l/DatadogSDKBridge.svg?style=flat)](https://cocoapods.org/pods/DatadogSDKBridge)
-[![Platform](https://img.shields.io/cocoapods/p/DatadogSDKBridge.svg?style=flat)](https://cocoapods.org/pods/DatadogSDKBridge)
+# Datadog Bridge for iOS
 
-## Example
+> A simplified bridge used to support cross-platform mobile frameworks.
 
-To run the example project, clone the repo, and run `pod install` from the Example directory first.
-
-## Requirements
+This project provides a simplified API to use Datadog features within cross-platform mobile frameworks such as React Native. It follows the mobile bridge API defined in the [dd-mobile-bridge](https://github.com/DataDog/dd-mobile-bridge) repository.
 
 ## Installation
 
-DatadogSDKBridge is available through [CocoaPods](https://cocoapods.org). To install
+DatadogSDKBridge is available through [CocoaPods](https://cocoapods.org) only. To install
 it, simply add the following line to your Podfile:
 
 ```ruby
 pod 'DatadogSDKBridge'
 ```
 
-## Author
+## Contributing
 
-Mert Buran, mert.buran@datadoghq.com
+Pull requests are welcome. First, open an issue to discuss what you would like to change. For more information, read the [Contributing Guide](CONTRIBUTING.md).
 
 ## License
 
-DatadogSDKBridge is available under the MIT license. See the LICENSE file for more info.
+[Apache License, v2.0](LICENSE)
