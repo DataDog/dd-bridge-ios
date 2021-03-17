@@ -29,7 +29,11 @@ internal class DdSdkImplementation: DdSdk {
     }
     
     func setAttributes(attributes: NSDictionary) {
-        // TODO
+        for key in attributes.allKeys {
+            let strKey = String(describing: key)
+            let value = attributes[key]
+            DDGlobal.rum.addAttribute(forKey: strKey, value: value)
+        }
     }
     
     func setUser(user: NSDictionary) {
