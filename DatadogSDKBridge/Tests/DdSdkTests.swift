@@ -9,7 +9,7 @@ import XCTest
 @testable import Datadog
 
 internal class DdSdkTests: XCTestCase {
-    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id")
+    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, additionalConfig: nil)
 
     func testSDKInitialization() {
         let originalConsolePrint = consolePrint

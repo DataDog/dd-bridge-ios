@@ -26,4 +26,12 @@ internal class DdSdkImplementation: DdSdk {
         }
         DDDatadog.initialize(appContext: DDAppContext(), configuration: ddConfig)
     }
+    
+    func setAttributes(attributes: NSDictionary) {
+        // TODO
+    }
+    
+    func setUser(user: NSDictionary) {
+        // TODO
+    }
 }
