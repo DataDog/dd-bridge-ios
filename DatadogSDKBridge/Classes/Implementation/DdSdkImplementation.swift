@@ -33,6 +33,21 @@ internal class DdSdkImplementation: DdSdk {
     }
     
     func setUser(user: NSDictionary) {
-        // TODO
+        var id: String? = nil
+        var name: String? = nil
+        var email: String? = nil
+        for key in user.allKeys {
+            let strKey = String(describing: key)
+            let value = user[key]
+            if (strKey == "id") {
+                id = String(describing:value)
+            } else if (strKey == "name") {
+                name = String(describing:value)
+            } else if (strKey == "email") {
+                email = String(describing:value)
+            }
+        }
+        // TODO RUMM-1197 enable extraInfo in ObjC
+        DDDatadog.setUserInfo(id: id, name: name, email: email)
     }
 }
