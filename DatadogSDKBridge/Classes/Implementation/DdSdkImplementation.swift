@@ -11,12 +11,13 @@ internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
         let ddConfig: DDConfiguration
         if let rumAppID = configuration.applicationId as String? {
-            ddConfig = DDConfiguration.builder(
+            let builder = DDConfiguration.builder(
                 rumApplicationID: rumAppID,
                 clientToken: configuration.clientToken as String,
                 environment: configuration.env as String
             )
-            .build()
+            builder.set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
+            ddConfig = builder.build()
         } else {
             ddConfig = DDConfiguration.builder(
                 clientToken: configuration.clientToken as String,
@@ -24,7 +25,7 @@ internal class DdSdkImplementation: DdSdk {
             )
             .build()
         }
-        DDDatadog.initialize(appContext: DDAppContext(), configuration: ddConfig)
+        DDDatadog.initialize(appContext: DDAppContext(), trackingConsent: DDTrackingConsent.granted(), configuration: ddConfig)
     }
     
     func setAttributes(attributes: NSDictionary) {
