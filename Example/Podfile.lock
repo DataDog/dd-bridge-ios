@@ -2,11 +2,9 @@ PODS:
   - DatadogSDK (1.5.1):
     - Kronos (~> 4.1)
   - DatadogSDKBridge (0.1.0):
-    - DatadogSDKObjc (~> 1.5.1)
+    - DatadogSDK (~> 1.5.1)
   - DatadogSDKBridge/Tests (0.1.0):
-    - DatadogSDKObjc (~> 1.5.1)
-  - DatadogSDKObjc (1.5.1):
-    - DatadogSDK (= 1.5.1)
+    - DatadogSDK (~> 1.5.1)
   - Kronos (4.2.1)
 
 DEPENDENCIES:
@@ -16,7 +14,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - DatadogSDK
-    - DatadogSDKObjc
     - Kronos
 
 EXTERNAL SOURCES:
@@ -25,8 +22,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   DatadogSDK: de0d7e8f35e65ea600d1844aaf6865a35dcba5da
-  DatadogSDKBridge: 5d6f1a374344bb58628239fe355b5fd058ec9ead
-  DatadogSDKObjc: 36e197d5ed5e050fdf29d62334564f5d499cb8a3
+  DatadogSDKBridge: c5b271a2d98b3eb254c07ec6bd3653842ad5b788
   Kronos: 0ca73a1c00dc9a49a0bab4a6ed42f282562a7058
 
 PODFILE CHECKSUM: a279494fd754e7d2c9e2655367835c03c5d1312a

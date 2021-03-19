@@ -6,7 +6,7 @@
 
 import XCTest
 @testable import DatadogSDKBridge
-@testable import DatadogObjc
+@testable import Datadog
 
 internal class DdTraceTests: XCTestCase {
     private let mockNativeTracer = MockTracer()
@@ -39,7 +39,7 @@ internal class DdTraceTests: XCTestCase {
         XCTAssertEqual(startedSpan.name, "test_span")
         XCTAssertNil(startedSpan.parent)
         let startDate = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
-        XCTAssertEqual(startedSpan.tags, testTags)
+        // XCTAssertEqual(startedSpan.tags, castAttributesToSwift(testTags))
         XCTAssertEqual(startedSpan.startTime, startDate)
     }
 
@@ -64,7 +64,8 @@ internal class DdTraceTests: XCTestCase {
 
         XCTAssertEqual(Array(tracer.spanDictionary.keys), [])
         XCTAssertEqual(startedSpan.finishTime, startDate + spanDuration)
-        XCTAssertEqual(startedSpan.tags?["last_key"] as? String, "last_value")
+        let tags = try XCTUnwrap(startedSpan.tags as? [String: AnyEncodable])
+        XCTAssertEqual(tags["last_key"]?.value as? String, "last_value")
     }
 
     func testFinishingInexistentSpan() {
@@ -104,30 +105,20 @@ internal class DdTraceTests: XCTestCase {
 }
 
 private class MockTracer: OTTracer {
+    var activeSpan: OTSpan?
+    
     private(set) var startedSpans = [MockSpan]()
-    func startSpan(_ operationName: String, childOf parent: OTSpanContext?, tags: NSDictionary?, startTime: Date?) -> OTSpan {
-        let mockSpan = MockSpan(name: operationName, parent: parent, tags: tags, startTime: startTime)
+    func startSpan(operationName: String, references: [OTReference]?, tags: [String : Encodable]?, startTime: Date?) -> OTSpan {
+        let mockSpan = MockSpan(name: operationName, parent: nil, tags: tags, startTime: startTime)
         startedSpans.append(mockSpan)
         return mockSpan
     }
 
     // swiftlint:disable unavailable_function
-    func startSpan(_ operationName: String) -> OTSpan {
+    func inject(spanContext: OTSpanContext, writer: OTFormatWriter) {
         fatalError("Should not be called")
     }
-    func startSpan(_ operationName: String, tags: NSDictionary?) -> OTSpan {
-        fatalError("Should not be called")
-    }
-    func startSpan(_ operationName: String, childOf parent: OTSpanContext?) -> OTSpan {
-        fatalError("Should not be called")
-    }
-    func startSpan(_ operationName: String, childOf parent: OTSpanContext?, tags: NSDictionary?) -> OTSpan {
-        fatalError("Should not be called")
-    }
-    func inject(_ spanContext: OTSpanContext, format: String, carrier: Any) throws {
-        fatalError("Should not be called")
-    }
-    func extractWithFormat(_ format: String, carrier: Any) throws {
+    func extract(reader: OTFormatReader) -> OTSpanContext? {
         fatalError("Should not be called")
     }
     // swiftlint:enable unavailable_function
@@ -138,60 +129,43 @@ private class MockSpan: OTSpan {
 
     let name: String
     let parent: OTSpanContext?
-    private(set) var tags: NSMutableDictionary?
+    private(set) var tags: [String:Encodable]
     let startTime: Date?
-    init(name: String, parent: OTSpanContext?, tags: NSDictionary?, startTime: Date?) {
+    init(name: String, parent: OTSpanContext?, tags: [String:Encodable]?, startTime: Date?) {
         self.name = name
         self.parent = parent
-        self.tags = tags.flatMap { NSMutableDictionary(dictionary: $0) }
+        self.tags = tags ?? [:]
         self.startTime = startTime
     }
 
-    func setTag(_ key: String, value: NSString) {
-        tags?.setObject(value, forKey: key as NSString)
-    }
-    func setTag(_ key: String, numberValue: NSNumber) {
-        tags?.setObject(numberValue, forKey: key as NSString)
-    }
-    func setTag(_ key: String, boolValue: Bool) {
-        tags?.setObject(boolValue, forKey: key as NSString)
+    func setTag(key: String, value: Encodable) {
+        tags[key] = value
     }
 
     private(set) var finishTime: Date? = MockSpan.unfinished
-    func finishWithTime(_ finishTime: Date?) {
-        self.finishTime = finishTime
+    func finish(at time: Date) {
+        self.finishTime = time
     }
 
     // swiftlint:disable unavailable_function
     var context: OTSpanContext { fatalError("Should not be called") }
-    var tracer: OTTracer { fatalError("Should not be called") }
+    func tracer() -> OTTracer {
+        fatalError("Should not be called")
+    }
     func setOperationName(_ operationName: String) {
         fatalError("Should not be called")
     }
-    func log(_ fields: [String: NSObject]) {
+    func log(fields: [String : Encodable], timestamp: Date) {
         fatalError("Should not be called")
     }
-    func log(_ fields: [String: NSObject], timestamp: Date?) {
+    func setBaggageItem(key: String, value: String) {
         fatalError("Should not be called")
     }
-    func setBaggageItem(_ key: String, value: String) -> OTSpan {
-        fatalError("Should not be called")
-    }
-    func getBaggageItem(_ key: String) -> String? {
-        fatalError("Should not be called")
-    }
-    func finish() {
+    func baggageItem(withKey key: String) -> String? {
         fatalError("Should not be called")
     }
     func setActive() -> OTSpan {
         fatalError("Should not be called")
     }
-    func setError(_ error: Error) {
-        fatalError("Should not be called")
-    }
-    func setError(kind: String, message: String, stack: String?) {
-        fatalError("Should not be called")
-    }
-    
     // swiftlint:enable unavailable_function
 }

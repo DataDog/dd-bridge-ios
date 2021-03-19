@@ -251,14 +251,12 @@
 				"${PODS_ROOT}/Target Support Files/Pods-DatadogSDKBridge_Example/Pods-DatadogSDKBridge_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DatadogSDK/Datadog.framework",
 				"${BUILT_PRODUCTS_DIR}/DatadogSDKBridge/DatadogSDKBridge.framework",
-				"${BUILT_PRODUCTS_DIR}/DatadogSDKObjc/DatadogObjc.framework",
 				"${BUILT_PRODUCTS_DIR}/Kronos/Kronos.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Datadog.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DatadogSDKBridge.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DatadogObjc.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kronos.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;

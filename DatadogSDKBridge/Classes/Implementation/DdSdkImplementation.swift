@@ -5,53 +5,54 @@
  */
 
 import Foundation
-import DatadogObjc
+import Datadog
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
-        let ddConfig: DDConfiguration
+        let ddConfig: Datadog.Configuration
         if let rumAppID = configuration.applicationId as String? {
-            let builder = DDConfiguration.builder(
+            ddConfig = Datadog.Configuration.builderUsing(
                 rumApplicationID: rumAppID,
                 clientToken: configuration.clientToken as String,
                 environment: configuration.env as String
             )
-            builder.set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
-            ddConfig = builder.build()
+            .set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
+            .build()
         } else {
-            ddConfig = DDConfiguration.builder(
+            ddConfig = Datadog.Configuration.builderUsing(
                 clientToken: configuration.clientToken as String,
                 environment: configuration.env as String
             )
             .build()
         }
-        DDDatadog.initialize(appContext: DDAppContext(), trackingConsent: DDTrackingConsent.granted(), configuration: ddConfig)
+        Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: TrackingConsent.granted, configuration: ddConfig)
     }
     
     func setAttributes(attributes: NSDictionary) {
-        for key in attributes.allKeys {
-            let strKey = String(describing: key)
-            let value = attributes[key]
-            DDGlobal.rum.addAttribute(forKey: strKey, value: value)
+        let castedAttributes = castAttributesToSwift(attributes)
+        for (key, value) in castedAttributes {
+            Global.rum.addAttribute(forKey: key, value: value)
         }
     }
     
     func setUser(user: NSDictionary) {
+        let castedUser = castAttributesToSwift(user)
+        var extraInfo = [String:Encodable]()
         var id: String? = nil
         var name: String? = nil
         var email: String? = nil
-        for key in user.allKeys {
-            let strKey = String(describing: key)
-            let value = user[key]
-            if (strKey == "id") {
+        for (key, value) in castedUser {
+            if (key == "id") {
                 id = String(describing:value)
-            } else if (strKey == "name") {
+            } else if (key == "name") {
                 name = String(describing:value)
-            } else if (strKey == "email") {
+            } else if (key == "email") {
                 email = String(describing:value)
+            } else {
+                extraInfo[key] = value
             }
         }
         // TODO RUMM-1197 enable extraInfo in ObjC
-        DDDatadog.setUserInfo(id: id, name: name, email: email)
+        Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
     }
 }
