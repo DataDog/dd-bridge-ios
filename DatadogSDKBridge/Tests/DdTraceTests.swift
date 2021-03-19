@@ -39,8 +39,11 @@ internal class DdTraceTests: XCTestCase {
         XCTAssertEqual(startedSpan.name, "test_span")
         XCTAssertNil(startedSpan.parent)
         let startDate = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
-        // XCTAssertEqual(startedSpan.tags, castAttributesToSwift(testTags))
         XCTAssertEqual(startedSpan.startTime, startDate)
+        let tags = try XCTUnwrap(startedSpan.tags as? [String: AnyEncodable])
+        XCTAssertEqual(tags["key_string"]?.value as? String, "value")
+        XCTAssertEqual(tags["key_number"]?.value as? Int, 123)
+        XCTAssertEqual(tags["key_bool"]?.value as? Bool, true)
     }
 
     func testFinishingASpan() throws {
