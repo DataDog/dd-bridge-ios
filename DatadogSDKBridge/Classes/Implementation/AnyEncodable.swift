@@ -6,8 +6,12 @@
 
 import Foundation
 
-internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: Encodable] {
-    return (attributes as? [String:Any])?.mapValues { AnyEncodable($0) } ?? [:]
+internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: AnyEncodable] {
+    return castAttributesToSwift(attributes as? [String: Any] ?? [:])
+}
+
+internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: AnyEncodable] {
+    return attributes.mapValues { AnyEncodable($0) }
 }
 
 /// Type erasing `Encodable` wrapper to bridge Objective-C's `Any` to Swift `Encodable`.

@@ -103,8 +103,6 @@ internal class DdLogsTests: XCTestCase {
 }
 
 private class MockNativeLogger: NativeLogger {
-    
-    
     struct MethodCall {
         enum Kind {
             case debug
@@ -117,7 +115,7 @@ private class MockNativeLogger: NativeLogger {
         let attributes: [String: Encodable]?
     }
     private(set) var receivedMethodCalls = [MethodCall]()
-    
+
     func debug(_ message: String, error: Error?, attributes: [String: Encodable]?) {
         receivedMethodCalls.append(MethodCall(kind: .debug, message: message, attributes: attributes))
     }

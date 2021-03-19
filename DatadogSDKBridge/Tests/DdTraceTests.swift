@@ -106,9 +106,9 @@ internal class DdTraceTests: XCTestCase {
 
 private class MockTracer: OTTracer {
     var activeSpan: OTSpan?
-    
+
     private(set) var startedSpans = [MockSpan]()
-    func startSpan(operationName: String, references: [OTReference]?, tags: [String : Encodable]?, startTime: Date?) -> OTSpan {
+    func startSpan(operationName: String, references: [OTReference]?, tags: [String: Encodable]?, startTime: Date?) -> OTSpan {
         let mockSpan = MockSpan(name: operationName, parent: nil, tags: tags, startTime: startTime)
         startedSpans.append(mockSpan)
         return mockSpan
@@ -129,9 +129,9 @@ private class MockSpan: OTSpan {
 
     let name: String
     let parent: OTSpanContext?
-    private(set) var tags: [String:Encodable]
+    private(set) var tags: [String: Encodable]
     let startTime: Date?
-    init(name: String, parent: OTSpanContext?, tags: [String:Encodable]?, startTime: Date?) {
+    init(name: String, parent: OTSpanContext?, tags: [String: Encodable]?, startTime: Date?) {
         self.name = name
         self.parent = parent
         self.tags = tags ?? [:]
@@ -155,7 +155,7 @@ private class MockSpan: OTSpan {
     func setOperationName(_ operationName: String) {
         fatalError("Should not be called")
     }
-    func log(fields: [String : Encodable], timestamp: Date) {
+    func log(fields: [String: Encodable], timestamp: Date) {
         fatalError("Should not be called")
     }
     func setBaggageItem(key: String, value: String) {

@@ -34,14 +34,14 @@ public class DdLogsImplementation: DdLogs {
     }
 
     public func info(message: NSString, context: NSDictionary) {
-        logger.info(message as String,  error: nil, attributes: castAttributesToSwift(context))
+        logger.info(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 
     public func warn(message: NSString, context: NSDictionary) {
-        logger.warn(message as String,  error: nil, attributes: castAttributesToSwift(context))
+        logger.warn(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 
     public func error(message: NSString, context: NSDictionary) {
-        logger.error(message as String, error: nil,  attributes: castAttributesToSwift(context))
+        logger.error(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 }

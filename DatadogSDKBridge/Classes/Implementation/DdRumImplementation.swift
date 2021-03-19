@@ -122,14 +122,14 @@ internal class DdRumImplementation: DdRum {
     }
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file:nil, line: nil)
+        nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
     }
 
     // MARK: - Private methods
 
     private func attributes(from context: NSDictionary, with timestampMs: Int64) -> [String: Encodable] {
-        var attributes = castAttributesToSwift(context)
-        attributes[Self.timestampKey] = timestampMs
-        return attributes
+        var context = context as? [String: Any] ?? [:]
+        context[Self.timestampKey] = timestampMs
+        return castAttributesToSwift(context)
     }
 }

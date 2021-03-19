@@ -27,32 +27,21 @@ internal class DdSdkImplementation: DdSdk {
         }
         Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: TrackingConsent.granted, configuration: ddConfig)
     }
-    
+
     func setAttributes(attributes: NSDictionary) {
         let castedAttributes = castAttributesToSwift(attributes)
         for (key, value) in castedAttributes {
             Global.rum.addAttribute(forKey: key, value: value)
         }
     }
-    
+
     func setUser(user: NSDictionary) {
-        let castedUser = castAttributesToSwift(user)
-        var extraInfo = [String:Encodable]()
-        var id: String? = nil
-        var name: String? = nil
-        var email: String? = nil
-        for (key, value) in castedUser {
-            if (key == "id") {
-                id = String(describing:value)
-            } else if (key == "name") {
-                name = String(describing:value)
-            } else if (key == "email") {
-                email = String(describing:value)
-            } else {
-                extraInfo[key] = value
-            }
-        }
-        // TODO RUMM-1197 enable extraInfo in ObjC
+        var castedUser = castAttributesToSwift(user)
+        let id = castedUser.removeValue(forKey: "id")?.value as? String
+        let name = castedUser.removeValue(forKey: "name")?.value as? String
+        let email = castedUser.removeValue(forKey: "email")?.value as? String
+        let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
+
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
     }
 }
