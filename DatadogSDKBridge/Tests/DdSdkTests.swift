@@ -11,7 +11,7 @@ import XCTest
 internal class DdSdkTests: XCTestCase {
     private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, additionalConfig: nil)
 
-    func testSDKInitialization() {
+    func testSDKInitialization() throws {
         let originalConsolePrint = consolePrint
         defer { consolePrint = originalConsolePrint }
 
@@ -25,5 +25,67 @@ internal class DdSdkTests: XCTestCase {
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.")
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSettingUserInfo() throws {
+        let bridge = DdSdkImplementation()
+        bridge.initialize(configuration: validConfiguration)
+
+        bridge.setUser(
+            user: NSDictionary(
+                dictionary: [
+                    "id": "abc-123",
+                    "name": "John Doe",
+                    "email": "john@doe.com",
+                    "extra-info-1": 123,
+                    "extra-info-2": "abc",
+                    "extra-info-3": true,
+                ]
+            )
+        )
+
+        let receivedUserInfo = try XCTUnwrap(Datadog.instance?.userInfoProvider.value)
+        XCTAssertEqual(receivedUserInfo.id, "abc-123")
+        XCTAssertEqual(receivedUserInfo.name, "John Doe")
+        XCTAssertEqual(receivedUserInfo.email, "john@doe.com")
+        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-1"] as? AnyEncodable)?.value as? Int, 123)
+        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-2"] as? AnyEncodable)?.value as? String, "abc")
+        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-3"] as? AnyEncodable)?.value as? Bool, true)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSettingAttributes() throws {
+        let bridge = DdSdkImplementation()
+        bridge.initialize(configuration: validConfiguration)
+
+        let rumMonitorMock = MockRUMMonitor()
+        Global.rum = rumMonitorMock
+
+        bridge.setAttributes(
+            attributes: NSDictionary(
+                dictionary: [
+                    "attribute-1": 123,
+                    "attribute-2": "abc",
+                    "attribute-3": true,
+                ]
+            )
+        )
+
+        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-1"] as? AnyEncodable)?.value as? Int, 123)
+        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-2"] as? AnyEncodable)?.value as? String, "abc")
+        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-3"] as? AnyEncodable)?.value as? Bool, true)
+
+        try Datadog.deinitializeOrThrow()
+    }
+}
+
+private class MockRUMMonitor: DDRUMMonitor {
+    private(set) var receivedAttributes = [AttributeKey: AttributeValue]()
+
+    override func addAttribute(forKey key: AttributeKey, value: AttributeValue) {
+        receivedAttributes[key] = value
     }
 }
