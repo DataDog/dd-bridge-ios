@@ -13,7 +13,7 @@ internal class DdLogsTests: XCTestCase {
 
     private let testMessage_swift: String = "message"
     private let testMessage_objc: NSString = "message"
-    private let validTestAttributes_swift: [String: Any] = ["key1": "value", "key2": 123]
+    private let validTestAttributes_swift: [String: Encodable] = ["key1": "value", "key2": 123]
     private let validTestAttributes_objc = NSDictionary(
         dictionary: ["key1": "value", "key2": 123]
     )
@@ -28,7 +28,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .debug)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
     }
 
     func testLoggerInfo_validAttributes() throws {
@@ -38,7 +38,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .info)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
     }
 
     func testLoggerWarn_validAttributes() throws {
@@ -48,7 +48,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .warn)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
     }
 
     func testLoggerError_validAttributes() throws {
@@ -58,7 +58,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .error)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
     }
 
     func testLoggerDebug_invalidAttributes() throws {
@@ -68,7 +68,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .debug)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, [:].keys)
+        XCTAssertEqual(received.attributes?.keys, [:].keys)
     }
 
     func testLoggerInfo_invalidAttributes() throws {
@@ -78,7 +78,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .info)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, [:].keys)
+        XCTAssertEqual(received.attributes?.keys, [:].keys)
     }
 
     func testLoggerWarn_invalidAttributes() throws {
@@ -88,7 +88,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .warn)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, [:].keys)
+        XCTAssertEqual(received.attributes?.keys, [:].keys)
     }
 
     func testLoggerError_invalidAttributes() throws {
@@ -98,7 +98,7 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .error)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes.keys, [:].keys)
+        XCTAssertEqual(received.attributes?.keys, [:].keys)
     }
 }
 
@@ -112,20 +112,20 @@ private class MockNativeLogger: NativeLogger {
         }
         let kind: Kind
         let message: String
-        let attributes: [String: Any]
+        let attributes: [String: Encodable]?
     }
     private(set) var receivedMethodCalls = [MethodCall]()
 
-    func debug(_ message: String, attributes: [String: Any]) {
+    func debug(_ message: String, error: Error?, attributes: [String: Encodable]?) {
         receivedMethodCalls.append(MethodCall(kind: .debug, message: message, attributes: attributes))
     }
-    func info(_ message: String, attributes: [String: Any]) {
+    func info(_ message: String, error: Error?, attributes: [String: Encodable]?) {
         receivedMethodCalls.append(MethodCall(kind: .info, message: message, attributes: attributes))
     }
-    func warn(_ message: String, attributes: [String: Any]) {
+    func warn(_ message: String, error: Error?, attributes: [String: Encodable]?) {
         receivedMethodCalls.append(MethodCall(kind: .warn, message: message, attributes: attributes))
     }
-    func error(_ message: String, attributes: [String: Any]) {
+    func error(_ message: String, error: Error?, attributes: [String: Encodable]?) {
         receivedMethodCalls.append(MethodCall(kind: .error, message: message, attributes: attributes))
     }
 }

@@ -5,25 +5,43 @@
  */
 
 import Foundation
-import DatadogObjc
+import Datadog
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
-        let ddConfig: DDConfiguration
+        let ddConfig: Datadog.Configuration
         if let rumAppID = configuration.applicationId as String? {
-            ddConfig = DDConfiguration.builder(
+            ddConfig = Datadog.Configuration.builderUsing(
                 rumApplicationID: rumAppID,
                 clientToken: configuration.clientToken as String,
                 environment: configuration.env as String
             )
+            .set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
             .build()
         } else {
-            ddConfig = DDConfiguration.builder(
+            ddConfig = Datadog.Configuration.builderUsing(
                 clientToken: configuration.clientToken as String,
                 environment: configuration.env as String
             )
             .build()
         }
-        DDDatadog.initialize(appContext: DDAppContext(), configuration: ddConfig)
+        Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: TrackingConsent.granted, configuration: ddConfig)
+    }
+
+    func setAttributes(attributes: NSDictionary) {
+        let castedAttributes = castAttributesToSwift(attributes)
+        for (key, value) in castedAttributes {
+            Global.rum.addAttribute(forKey: key, value: value)
+        }
+    }
+
+    func setUser(user: NSDictionary) {
+        var castedUser = castAttributesToSwift(user)
+        let id = castedUser.removeValue(forKey: "id")?.value as? String
+        let name = castedUser.removeValue(forKey: "name")?.value as? String
+        let email = castedUser.removeValue(forKey: "email")?.value as? String
+        let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
+
+        Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
     }
 }

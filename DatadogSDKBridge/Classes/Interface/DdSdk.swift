@@ -15,4 +15,14 @@ public protocol DdSdk {
        Initializes Datadog's features.
      */
     func initialize(configuration: DdSdkConfiguration)
+
+    /**
+       Sets the global context (set of attributes) attached with all future Logs, Spans and RUM events.
+     */
+    func setAttributes(attributes: NSDictionary)
+
+    /**
+       Set the user information.
+     */
+    func setUser(user: NSDictionary)
 }

@@ -5,21 +5,21 @@
  */
 
 import Foundation
-import DatadogObjc
+import Datadog
 
 extension DDRUMMonitor: NativeRUM { }
 internal protocol NativeRUM {
-    func startView(key: String, path: String?, attributes: [String: Any])
-    func stopView(key: String, attributes: [String: Any])
-    func addError(message: String, source: DDRUMErrorSource, stack: String?, attributes: [String: Any])
-    func startResourceLoading(resourceKey: String, httpMethod: DDRUMMethod, urlString: String, attributes: [String: Any])
-    func stopResourceLoading(resourceKey: String, statusCode: Int, kind: DDRUMResourceType, attributes: [String: Any])
-    func startUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any])
-    func stopUserAction(type: DDRUMUserActionType, name: String?, attributes: [String: Any])
-    func addUserAction(type: DDRUMUserActionType, name: String, attributes: [String: Any])
+    func startView(key: String, path: String?, attributes: [String: Encodable])
+    func stopView(key: String, attributes: [String: Encodable])
+    func addError(message: String, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?)
+    func startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String, attributes: [String: Encodable])
+    func stopResourceLoading(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [String: Encodable])
+    func startUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
+    func stopUserAction(type: RUMUserActionType, name: String?, attributes: [String: Encodable])
+    func addUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
 }
 
-private extension DDRUMUserActionType {
+private extension RUMUserActionType {
     init(from string: String) {
         switch string.lowercased() {
         case "tap": self = .tap
@@ -30,7 +30,7 @@ private extension DDRUMUserActionType {
     }
 }
 
-private extension DDRUMErrorSource {
+private extension RUMErrorSource {
     init(from string: String) {
         switch string.lowercased() {
         case "source": self = .source
@@ -41,7 +41,7 @@ private extension DDRUMErrorSource {
     }
 }
 
-private extension DDRUMResourceType {
+private extension RUMResourceType {
     init(from string: String) {
         switch string {
         case "image": self = .image
@@ -58,7 +58,7 @@ private extension DDRUMResourceType {
     }
 }
 
-private extension DDRUMMethod {
+private extension RUMMethod {
     init(from string: String) {
         switch string.uppercased() {
         case "POST": self = .post
@@ -77,7 +77,7 @@ internal class DdRumImplementation: DdRum {
 
     let nativeRUM: NativeRUM
 
-    private typealias UserAction = (type: DDRUMUserActionType, name: String?)
+    private typealias UserAction = (type: RUMUserActionType, name: String?)
     private var ongoingUserActions = [UserAction]()
 
     internal init(_ nativeRUM: NativeRUM) {
@@ -85,7 +85,7 @@ internal class DdRumImplementation: DdRum {
     }
 
     convenience init() {
-        self.init(DDRUMMonitor())
+        self.init(RUMMonitor.initialize())
     }
 
     func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
@@ -97,7 +97,7 @@ internal class DdRumImplementation: DdRum {
     }
 
     func startAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
-        let actionType = DDRUMUserActionType(from: type as String)
+        let actionType = RUMUserActionType(from: type as String)
         nativeRUM.startUserAction(type: actionType, name: name as String, attributes: attributes(from: context, with: timestampMs))
         ongoingUserActions.append((type: actionType, name: name as String))
     }
@@ -110,26 +110,26 @@ internal class DdRumImplementation: DdRum {
     }
 
     func addAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.addUserAction(type: DDRUMUserActionType(from: type as String), name: name as String, attributes: attributes(from: context, with: timestampMs))
+        nativeRUM.addUserAction(type: RUMUserActionType(from: type as String), name: name as String, attributes: attributes(from: context, with: timestampMs))
     }
 
     func startResource(key: NSString, method: NSString, url: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.startResourceLoading(resourceKey: key as String, httpMethod: DDRUMMethod(from: method as String), urlString: url as String, attributes: attributes(from: context, with: timestampMs))
+        nativeRUM.startResourceLoading(resourceKey: key as String, httpMethod: RUMMethod(from: method as String), urlString: url as String, attributes: attributes(from: context, with: timestampMs))
     }
 
     func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.stopResourceLoading(resourceKey: key as String, statusCode: Int(statusCode), kind: DDRUMResourceType(from: kind as String), attributes: attributes(from: context, with: timestampMs))
+        nativeRUM.stopResourceLoading(resourceKey: key as String, statusCode: Int(statusCode), kind: RUMResourceType(from: kind as String), size: nil, attributes: attributes(from: context, with: timestampMs))
     }
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.addError(message: message as String, source: DDRUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs))
+        nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
     }
 
     // MARK: - Private methods
 
-    private func attributes(from context: NSDictionary, with timestampMs: Int64) -> [String: Any] {
-        var attributes = context as? [String: Any] ?? [:]
-        attributes[Self.timestampKey] = timestampMs
-        return attributes
+    private func attributes(from context: NSDictionary, with timestampMs: Int64) -> [String: Encodable] {
+        var context = context as? [String: Any] ?? [:]
+        context[Self.timestampKey] = timestampMs
+        return castAttributesToSwift(context)
     }
 }

@@ -5,7 +5,7 @@
  */
 
 import Foundation
-import DatadogObjc
+import Datadog
 
 internal class DdTraceImpementation: DdTrace {
     private let tracer: OTTracer
@@ -16,7 +16,7 @@ internal class DdTraceImpementation: DdTrace {
     }
 
     convenience init() {
-        self.init(DDTracer(configuration: DDTracerConfiguration()))
+        self.init(Tracer.initialize(configuration: Tracer.Configuration()))
     }
 
     func startSpan(operation: NSString, timestampMs: Int64, context: NSDictionary) -> NSString {
@@ -26,9 +26,9 @@ internal class DdTraceImpementation: DdTrace {
 
         objc_sync_enter(self)
         spanDictionary[id] = tracer.startSpan(
-            operation as String,
+            operationName: operation as String,
             childOf: nil,
-            tags: context,
+            tags: castAttributesToSwift(context),
             startTime: startDate
         )
         objc_sync_exit(self)
@@ -44,22 +44,14 @@ internal class DdTraceImpementation: DdTrace {
         if let span = optionalSpan {
             set(tags: context, to: span)
             let timestampInSeconds = TimeInterval(timestampMs / 1_000)
-            span.finishWithTime(Date(timeIntervalSince1970: timestampInSeconds))
+            span.finish(at: Date(timeIntervalSince1970: timestampInSeconds))
         }
     }
 
     private func set(tags: NSDictionary, to span: OTSpan) {
-        guard let stringKeyedTags = tags as? [String: Any] else {
-            return
-        }
-        for (key, value) in stringKeyedTags {
-            if let tagNSString = value as? NSString {
-                span.setTag(key, value: tagNSString)
-            } else if let tagNSNumber = value as? NSNumber {
-                span.setTag(key, numberValue: tagNSNumber)
-            } else if let tagBool = value as? Bool {
-                span.setTag(key, boolValue: tagBool)
-            }
+        let castedTags = castAttributesToSwift(tags)
+        for (key, value) in castedTags {
+            span.setTag(key: key, value: value)
         }
     }
 }

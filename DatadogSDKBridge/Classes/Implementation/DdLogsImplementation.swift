@@ -5,14 +5,14 @@
  */
 
 import Foundation
-import DatadogObjc
+import Datadog
 
-extension DDLogger: NativeLogger { }
+extension Logger: NativeLogger { }
 internal protocol NativeLogger {
-    func debug(_ message: String, attributes: [String: Any])
-    func info(_ message: String, attributes: [String: Any])
-    func warn(_ message: String, attributes: [String: Any])
-    func error(_ message: String, attributes: [String: Any])
+    func debug(_ message: String, error: Error?, attributes: [String: Encodable]?)
+    func info(_ message: String, error: Error?, attributes: [String: Encodable]?)
+    func warn(_ message: String, error: Error?, attributes: [String: Encodable]?)
+    func error(_ message: String, error: Error?, attributes: [String: Encodable]?)
 }
 
 public class DdLogsImplementation: DdLogs {
@@ -23,25 +23,25 @@ public class DdLogsImplementation: DdLogs {
     }
 
     public convenience init() {
-        let builder = DDLogger.builder()
-        builder.sendNetworkInfo(true)
-        builder.printLogsToConsole(true)
+        let builder = Logger.builder
+            .sendNetworkInfo(true)
+            .printLogsToConsole(true)
         self.init(builder.build())
     }
 
     public func debug(message: NSString, context: NSDictionary) {
-        logger.debug(message as String, attributes: context as? [String: Any] ?? [:])
+        logger.debug(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 
     public func info(message: NSString, context: NSDictionary) {
-        logger.info(message as String, attributes: context as? [String: Any] ?? [:])
+        logger.info(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 
     public func warn(message: NSString, context: NSDictionary) {
-        logger.warn(message as String, attributes: context as? [String: Any] ?? [:])
+        logger.warn(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 
     public func error(message: NSString, context: NSDictionary) {
-        logger.error(message as String, attributes: context as? [String: Any] ?? [:])
+        logger.error(message as String, error: nil, attributes: castAttributesToSwift(context))
     }
 }

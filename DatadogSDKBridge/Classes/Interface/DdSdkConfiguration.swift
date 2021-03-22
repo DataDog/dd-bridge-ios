@@ -12,20 +12,32 @@ import Foundation
      - clientToken: A valid Datadog client token.
      - env: The application’s environment, for example: prod, pre-prod, staging, etc.
      - applicationId: The RUM application ID.
+     - nativeCrashReportEnabled: Whether the SDK should track native (pure iOS or pure Android) crashes (default is false).
+     - sampleRate: The sample rate (between 0 and 100) of RUM sessions kept.
+     - additionalConfig: Additional configuration parameters.
  */
 @objc(DdSdkConfiguration)
 public class DdSdkConfiguration: NSObject {
     public var clientToken: NSString = ""
     public var env: NSString = ""
     public var applicationId: NSString? = nil
+    public var nativeCrashReportEnabled: Bool? = nil
+    public var sampleRate: Double? = nil
+    public var additionalConfig: NSDictionary? = nil
 
     public init(
         clientToken: NSString,
         env: NSString,
-        applicationId: NSString?
+        applicationId: NSString?,
+        nativeCrashReportEnabled: Bool?,
+        sampleRate: Double?,
+        additionalConfig: NSDictionary?
     ) {
         self.clientToken = clientToken
         self.env = env
         self.applicationId = applicationId
+        self.nativeCrashReportEnabled = nativeCrashReportEnabled
+        self.sampleRate = sampleRate
+        self.additionalConfig = additionalConfig
     }
 }
