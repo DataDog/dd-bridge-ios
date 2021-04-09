@@ -9,7 +9,7 @@ import XCTest
 @testable import Datadog
 
 internal class DdSdkTests: XCTestCase {
-    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, additionalConfig: nil)
+    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: nil)
 
     func testSDKInitialization() throws {
         let originalConsolePrint = consolePrint
@@ -28,6 +28,38 @@ internal class DdSdkTests: XCTestCase {
 
         try Datadog.deinitializeOrThrow()
     }
+    
+    func testBuildConfigurationDefaultEndpoint() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: nil)
+        
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+        
+        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
+    }
+    
+    func testBuildConfigurationUSEndpoint() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "US", additionalConfig: nil)
+        
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+        
+        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
+    }
+    
+    func testBuildConfigurationEUEndpoint() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "EU", additionalConfig: nil)
+        
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+        
+        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.eu)
+    }
+    
+    func testBuildConfigurationGOVEndpoint() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "GOV", additionalConfig: nil)
+        
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+        
+        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.gov)
+    }
 
     func testSettingUserInfo() throws {
         let bridge = DdSdkImplementation()
@@ -41,7 +73,7 @@ internal class DdSdkTests: XCTestCase {
                     "email": "john@doe.com",
                     "extra-info-1": 123,
                     "extra-info-2": "abc",
-                    "extra-info-3": true,
+                    "extra-info-3": true
                 ]
             )
         )
@@ -69,7 +101,7 @@ internal class DdSdkTests: XCTestCase {
                 dictionary: [
                     "attribute-1": 123,
                     "attribute-2": "abc",
-                    "attribute-3": true,
+                    "attribute-3": true
                 ]
             )
         )
