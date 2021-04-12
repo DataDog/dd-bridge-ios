@@ -19,11 +19,11 @@ class AnyEncodableTests: XCTestCase {
             "nested": [
                 "a": "alpha",
                 "b": "bravo",
-                "c": "charlie",
+                "c": "charlie"
             ],
             "null": NSNull(),
             "string": "string",
-            "url": NSURL(string: "https://datadoghq.com")!,
+            "url": NSURL(string: "https://datadoghq.com")!
         ]
 
         // When

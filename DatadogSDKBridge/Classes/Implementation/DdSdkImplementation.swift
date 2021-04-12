@@ -9,22 +9,7 @@ import Datadog
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
-        let ddConfig: Datadog.Configuration
-        if let rumAppID = configuration.applicationId as String? {
-            ddConfig = Datadog.Configuration.builderUsing(
-                rumApplicationID: rumAppID,
-                clientToken: configuration.clientToken as String,
-                environment: configuration.env as String
-            )
-            .set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
-            .build()
-        } else {
-            ddConfig = Datadog.Configuration.builderUsing(
-                clientToken: configuration.clientToken as String,
-                environment: configuration.env as String
-            )
-            .build()
-        }
+        let ddConfig = buildConfiguration(configuration: configuration)
         Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: TrackingConsent.granted, configuration: ddConfig)
     }
 
@@ -43,5 +28,35 @@ internal class DdSdkImplementation: DdSdk {
         let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
 
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
+    }
+
+    func buildConfiguration(configuration: DdSdkConfiguration) -> Datadog.Configuration {
+        let ddConfigBuilder: Datadog.Configuration.Builder
+        if let rumAppID = configuration.applicationId as String? {
+            ddConfigBuilder = Datadog.Configuration.builderUsing(
+                rumApplicationID: rumAppID,
+                clientToken: configuration.clientToken as String,
+                environment: configuration.env as String
+            )
+            .set(rumSessionsSamplingRate: Float(configuration.sampleRate ?? 100.0))
+        } else {
+            ddConfigBuilder = Datadog.Configuration.builderUsing(
+                clientToken: configuration.clientToken as String,
+                environment: configuration.env as String
+            )
+        }
+
+        switch configuration.site?.lowercased ?? "us" {
+        case "us":
+            ddConfigBuilder.set(endpoint: .us)
+        case "eu":
+            ddConfigBuilder.set(endpoint: .eu)
+        case "gov":
+            ddConfigBuilder.set(endpoint: .gov)
+        default:
+            ddConfigBuilder.set(endpoint: .us)
+        }
+
+        return ddConfigBuilder.build()
     }
 }
