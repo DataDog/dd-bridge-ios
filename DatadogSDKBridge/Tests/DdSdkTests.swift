@@ -9,7 +9,7 @@ import XCTest
 @testable import Datadog
 
 internal class DdSdkTests: XCTestCase {
-    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: nil)
+    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
 
     func testSDKInitialization() throws {
         let originalConsolePrint = consolePrint
@@ -30,7 +30,7 @@ internal class DdSdkTests: XCTestCase {
     }
     
     func testBuildConfigurationDefaultEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: nil)
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
         
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
         
@@ -38,7 +38,7 @@ internal class DdSdkTests: XCTestCase {
     }
     
     func testBuildConfigurationUSEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "US", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "US", trackingConsent: "pending", additionalConfig: nil)
         
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
         
@@ -46,7 +46,7 @@ internal class DdSdkTests: XCTestCase {
     }
     
     func testBuildConfigurationEUEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "EU", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "EU", trackingConsent: "pending", additionalConfig: nil)
         
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
         
@@ -54,7 +54,7 @@ internal class DdSdkTests: XCTestCase {
     }
     
     func testBuildConfigurationGOVEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "GOV", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "GOV", trackingConsent: "pending", additionalConfig: nil)
         
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
         
@@ -62,7 +62,7 @@ internal class DdSdkTests: XCTestCase {
     }
     
     func testBuildConfigurationAdditionalConfig() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: ["foo": "test", "bar": 42])
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["foo": "test", "bar": 42])
         
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
         
@@ -120,6 +120,42 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-3"] as? AnyEncodable)?.value as? Bool, true)
 
         try Datadog.deinitializeOrThrow()
+    }
+    
+    func testBuildTrackingConsentPending() {
+        
+        let consent:NSString? = "pending"
+        
+        let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
+        
+        XCTAssertEqual(trackingConsent, TrackingConsent.pending)
+    }
+    
+    func testBuildTrackingConsentGranted() {
+        
+        let consent:NSString? = "granted"
+        
+        let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
+        
+        XCTAssertEqual(trackingConsent, TrackingConsent.granted)
+    }
+    
+    func testBuildTrackingConsentNotGranted() {
+        
+        let consent:NSString? = "not_granted"
+        
+        let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
+        
+        XCTAssertEqual(trackingConsent, TrackingConsent.notGranted)
+    }
+    
+    func testBuildTrackingConsentNil() {
+        
+        let consent: NSString? = nil
+        
+        let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
+        
+        XCTAssertEqual(trackingConsent, TrackingConsent.pending)
     }
 }
 
