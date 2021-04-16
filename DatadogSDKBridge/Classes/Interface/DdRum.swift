@@ -50,4 +50,9 @@ public protocol DdRum {
        Add a RUM Error.
      */
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary)
+
+    /**
+       Adds a specific timing in the active View. The timing duration will be computed as the difference between the time the View was started and the time this function was called.
+     */
+    func addTiming(name: NSString)
 }
