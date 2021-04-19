@@ -56,6 +56,9 @@ internal class DdSdkImplementation: DdSdk {
         default:
             ddConfigBuilder.set(endpoint: .us)
         }
+        
+        let additionalConfig: [String: Any] = configuration.additionalConfig as? [String:Any] ?? [:]
+        ddConfigBuilder.set(additionalConfiguration: additionalConfig)
 
         return ddConfigBuilder.build()
     }

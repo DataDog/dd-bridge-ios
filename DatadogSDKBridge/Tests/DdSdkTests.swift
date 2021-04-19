@@ -60,6 +60,15 @@ internal class DdSdkTests: XCTestCase {
         
         XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.gov)
     }
+    
+    func testBuildConfigurationAdditionalConfig() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, additionalConfig: ["foo": "test", "bar": 42])
+        
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+        
+        XCTAssertEqual(ddConfig.additionalConfiguration["foo"] as! String, "test")
+        XCTAssertEqual(ddConfig.additionalConfiguration["bar"] as! Int, 42)
+    }
 
     func testSettingUserInfo() throws {
         let bridge = DdSdkImplementation()
