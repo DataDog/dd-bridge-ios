@@ -125,6 +125,14 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(lastAttribtutes["foo"]?.value as? Int, 123)
         XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey]?.value as? Int64, randomTimestamp)
     }
+    
+    func testAddTiming() throws {
+        rum.addTiming(name: "timing")
+
+        XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .addTiming(name: "timing"))
+        XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 0)
+    }
 }
 
 private class MockNativeRUM: NativeRUM {
@@ -137,6 +145,7 @@ private class MockNativeRUM: NativeRUM {
         case startUserAction(type: RUMUserActionType, name: String)
         case stopUserAction(type: RUMUserActionType, name: String?)
         case addUserAction(type: RUMUserActionType, name: String)
+        case addTiming(name: String)
     }
 
     private(set) var calledMethods = [CalledMethod]()
@@ -175,6 +184,9 @@ private class MockNativeRUM: NativeRUM {
     func addUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable]) {
         calledMethods.append(.addUserAction(type: type, name: name))
         receivedAttributes.append(attributes as! [String: AnyEncodable])
+    }
+    func addTiming(name: String) {
+        calledMethods.append(.addTiming(name: name))
     }
     // swiftlint:enable force_cast
 }

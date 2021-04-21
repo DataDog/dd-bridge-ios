@@ -17,6 +17,7 @@ internal protocol NativeRUM {
     func startUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
     func stopUserAction(type: RUMUserActionType, name: String?, attributes: [String: Encodable])
     func addUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
+    func addTiming(name: String)
 }
 
 private extension RUMUserActionType {
@@ -123,6 +124,10 @@ internal class DdRumImplementation: DdRum {
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
         nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
+    }
+    
+    func addTiming(name: NSString) {
+        nativeRUM.addTiming(name: name as String)
     }
 
     // MARK: - Private methods

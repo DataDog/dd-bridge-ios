@@ -10,7 +10,8 @@ import Datadog
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
         let ddConfig = buildConfiguration(configuration: configuration)
-        Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: TrackingConsent.granted, configuration: ddConfig)
+        let consent = buildTrackingConsent(consent: configuration.trackingConsent)
+        Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: consent, configuration: ddConfig)
     }
 
     func setAttributes(attributes: NSDictionary) {
@@ -28,6 +29,10 @@ internal class DdSdkImplementation: DdSdk {
         let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
 
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
+    }
+    
+    func setTrackingConsent(trackingConsent: NSString) {
+        Datadog.set(trackingConsent: buildTrackingConsent(consent: trackingConsent))
     }
 
     func buildConfiguration(configuration: DdSdkConfiguration) -> Datadog.Configuration {
@@ -61,5 +66,20 @@ internal class DdSdkImplementation: DdSdk {
         ddConfigBuilder.set(additionalConfiguration: additionalConfig)
 
         return ddConfigBuilder.build()
+    }
+    
+    func buildTrackingConsent(consent: NSString?) -> TrackingConsent {
+        let trackingConsent: TrackingConsent
+        switch consent?.lowercased {
+        case "pending":
+            trackingConsent = .pending
+        case "granted":
+            trackingConsent = .granted
+        case "not_granted":
+            trackingConsent = .notGranted
+        default:
+            trackingConsent = .pending
+        }
+        return trackingConsent
     }
 }

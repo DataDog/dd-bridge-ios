@@ -25,4 +25,9 @@ public protocol DdSdk {
        Set the user information.
      */
     func setUser(user: NSDictionary)
+
+    /**
+       Set the tracking consent regarding the data collection.
+     */
+    func setTrackingConsent(trackingConsent: NSString)
 }

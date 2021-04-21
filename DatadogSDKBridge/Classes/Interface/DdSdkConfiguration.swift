@@ -15,6 +15,7 @@ import Foundation
      - nativeCrashReportEnabled: Whether the SDK should track native (pure iOS or pure Android) crashes (default is false).
      - sampleRate: The sample rate (between 0 and 100) of RUM sessions kept.
      - site: The Datadog site of your organization (can be 'US', 'EU' or 'GOV', default is 'US').
+     - trackingConsent: Consent, which can take one of the following values: 'pending', 'granted', 'not_granted'.
      - additionalConfig: Additional configuration parameters.
  */
 @objc(DdSdkConfiguration)
@@ -25,6 +26,7 @@ public class DdSdkConfiguration: NSObject {
     public var nativeCrashReportEnabled: Bool? = nil
     public var sampleRate: Double? = nil
     public var site: NSString? = nil
+    public var trackingConsent: NSString? = nil
     public var additionalConfig: NSDictionary? = nil
 
     public init(
@@ -34,6 +36,7 @@ public class DdSdkConfiguration: NSObject {
         nativeCrashReportEnabled: Bool?,
         sampleRate: Double?,
         site: NSString?,
+        trackingConsent: NSString?,
         additionalConfig: NSDictionary?
     ) {
         self.clientToken = clientToken
@@ -42,6 +45,7 @@ public class DdSdkConfiguration: NSObject {
         self.nativeCrashReportEnabled = nativeCrashReportEnabled
         self.sampleRate = sampleRate
         self.site = site
+        self.trackingConsent = trackingConsent
         self.additionalConfig = additionalConfig
     }
 }
