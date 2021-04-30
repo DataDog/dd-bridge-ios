@@ -18,6 +18,16 @@ internal protocol NativeRUM {
     func stopUserAction(type: RUMUserActionType, name: String?, attributes: [String: Encodable])
     func addUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
     func addTiming(name: String)
+    func addResourceMetrics(resourceKey: String,
+                            fetch: (start: Date, end: Date),
+                            redirection: (start: Date, end: Date)?,
+                            dns: (start: Date, end: Date)?,
+                            connect: (start: Date, end: Date)?,
+                            ssl: (start: Date, end: Date)?,
+                            firstByte: (start: Date, end: Date)?,
+                            download: (start: Date, end: Date)?,
+                            responseSize: Int64?,
+                            attributes: [AttributeKey: AttributeValue])
 }
 
 private extension RUMUserActionType {
@@ -75,6 +85,15 @@ private extension RUMMethod {
 
 internal class DdRumImplementation: DdRum {
     internal static let timestampKey = "_dd.timestamp"
+    internal static let resourceTimingsKey = "_dd.resource_timings"
+
+    internal static let fetchTimingKey = "fetch"
+    internal static let redirectTimingKey = "redirect"
+    internal static let dnsTimingKey = "dns"
+    internal static let connectTimingKey = "connect"
+    internal static let sslTimingKey = "ssl"
+    internal static let firstByteTimingKey = "firstByte"
+    internal static let downloadTimingKey = "download"
 
     let nativeRUM: NativeRUM
 
@@ -119,7 +138,41 @@ internal class DdRumImplementation: DdRum {
     }
 
     func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.stopResourceLoading(resourceKey: key as String, statusCode: Int(statusCode), kind: RUMResourceType(from: kind as String), size: nil, attributes: attributes(from: context, with: timestampMs))
+        let mutableContext = NSMutableDictionary(dictionary: context)
+        if let resourceTimings = mutableContext.object(forKey: Self.resourceTimingsKey) as? [String: Any] {
+            mutableContext.removeObject(forKey: Self.resourceTimingsKey)
+
+            let fetch = timingValue(from: resourceTimings, for: Self.fetchTimingKey)
+            let redirect = timingValue(from: resourceTimings, for: Self.redirectTimingKey)
+            let dns = timingValue(from: resourceTimings, for: Self.dnsTimingKey)
+            let connect = timingValue(from: resourceTimings, for: Self.connectTimingKey)
+            let ssl = timingValue(from: resourceTimings, for: Self.sslTimingKey)
+            let firstByte = timingValue(from: resourceTimings, for: Self.firstByteTimingKey)
+            let download = timingValue(from: resourceTimings, for: Self.downloadTimingKey)
+
+            if let fetch = fetch {
+                nativeRUM.addResourceMetrics(
+                    resourceKey: key as String,
+                    fetch: fetch,
+                    redirection: redirect,
+                    dns: dns,
+                    connect: connect,
+                    ssl: ssl,
+                    firstByte: firstByte,
+                    download: download,
+                    responseSize: nil,
+                    attributes: [:]
+                )
+            }
+        }
+
+        nativeRUM.stopResourceLoading(
+            resourceKey: key as String,
+            statusCode: Int(statusCode),
+            kind: RUMResourceType(from: kind as String),
+            size: nil,
+            attributes: attributes(from: mutableContext, with: timestampMs)
+        )
     }
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
@@ -136,5 +189,16 @@ internal class DdRumImplementation: DdRum {
         var context = context as? [String: Any] ?? [:]
         context[Self.timestampKey] = timestampMs
         return castAttributesToSwift(context)
+    }
+
+    private func timingValue(from timings: [String: Any], for timingName: String) -> (start: Date, end: Date)? {
+        let timing = timings[timingName] as? [String: NSNumber]
+        if let startInNs = timing?["startTime"]?.int64Value, let durationInNs = timing?["duration"]?.int64Value {
+            return (
+                Date(timeIntervalSince1970: TimeInterval(Double(startInNs) / 1_000_000_000)),
+                Date(timeIntervalSince1970: TimeInterval(Double(startInNs + durationInNs) / 1_000_000_000))
+            )
+        }
+        return nil
     }
 }
