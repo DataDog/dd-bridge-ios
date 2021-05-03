@@ -142,28 +142,7 @@ internal class DdRumImplementation: DdRum {
         if let resourceTimings = mutableContext.object(forKey: Self.resourceTimingsKey) as? [String: Any] {
             mutableContext.removeObject(forKey: Self.resourceTimingsKey)
 
-            let fetch = timingValue(from: resourceTimings, for: Self.fetchTimingKey)
-            let redirect = timingValue(from: resourceTimings, for: Self.redirectTimingKey)
-            let dns = timingValue(from: resourceTimings, for: Self.dnsTimingKey)
-            let connect = timingValue(from: resourceTimings, for: Self.connectTimingKey)
-            let ssl = timingValue(from: resourceTimings, for: Self.sslTimingKey)
-            let firstByte = timingValue(from: resourceTimings, for: Self.firstByteTimingKey)
-            let download = timingValue(from: resourceTimings, for: Self.downloadTimingKey)
-
-            if let fetch = fetch {
-                nativeRUM.addResourceMetrics(
-                    resourceKey: key as String,
-                    fetch: fetch,
-                    redirection: redirect,
-                    dns: dns,
-                    connect: connect,
-                    ssl: ssl,
-                    firstByte: firstByte,
-                    download: download,
-                    responseSize: nil,
-                    attributes: [:]
-                )
-            }
+            addResourceMetrics(key: key, resourceTimings: resourceTimings)
         }
 
         nativeRUM.stopResourceLoading(
@@ -191,14 +170,43 @@ internal class DdRumImplementation: DdRum {
         return castAttributesToSwift(context)
     }
 
+    private func addResourceMetrics(key: NSString, resourceTimings: [String: Any]) {
+        let fetch = timingValue(from: resourceTimings, for: Self.fetchTimingKey)
+        let redirect = timingValue(from: resourceTimings, for: Self.redirectTimingKey)
+        let dns = timingValue(from: resourceTimings, for: Self.dnsTimingKey)
+        let connect = timingValue(from: resourceTimings, for: Self.connectTimingKey)
+        let ssl = timingValue(from: resourceTimings, for: Self.sslTimingKey)
+        let firstByte = timingValue(from: resourceTimings, for: Self.firstByteTimingKey)
+        let download = timingValue(from: resourceTimings, for: Self.downloadTimingKey)
+
+        if let fetch = fetch {
+            nativeRUM.addResourceMetrics(
+                resourceKey: key as String,
+                fetch: fetch,
+                redirection: redirect,
+                dns: dns,
+                connect: connect,
+                ssl: ssl,
+                firstByte: firstByte,
+                download: download,
+                responseSize: nil,
+                attributes: [:]
+            )
+        }
+    }
+
     private func timingValue(from timings: [String: Any], for timingName: String) -> (start: Date, end: Date)? {
         let timing = timings[timingName] as? [String: NSNumber]
         if let startInNs = timing?["startTime"]?.int64Value, let durationInNs = timing?["duration"]?.int64Value {
             return (
-                Date(timeIntervalSince1970: TimeInterval(Double(startInNs) / 1_000_000_000)),
-                Date(timeIntervalSince1970: TimeInterval(Double(startInNs + durationInNs) / 1_000_000_000))
+                Date(timeIntervalSince1970: TimeInterval(fromNs: startInNs)),
+                Date(timeIntervalSince1970: TimeInterval(fromNs: startInNs + durationInNs))
             )
         }
         return nil
     }
+}
+
+internal extension TimeInterval {
+    init(fromNs ns: Int64) { self = TimeInterval(Double(ns) / 1_000_000_000) }
 }

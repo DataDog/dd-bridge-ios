@@ -192,7 +192,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     private func nanoTimeToDate(timestampNs: Int64) -> Date {
-        return Date(timeIntervalSince1970: TimeInterval(Double(timestampNs) / 1_000_000_000))
+        return Date(timeIntervalSince1970: TimeInterval(fromNs: timestampNs))
     }
 }
 
