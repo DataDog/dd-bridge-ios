@@ -27,7 +27,7 @@ internal class DdRumTests: XCTestCase {
         rum.startView(key: "view key", name: "view name", timestampMs: randomTimestamp, context: ["foo": 123])
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .startView(key: "view key", path: "view name"))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .startView(key: "view key", name: "view name"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
         let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
         XCTAssertEqual(lastAttribtutes.count, 2)
@@ -203,7 +203,7 @@ private class MockNativeRUM: NativeRUM {
     }
 
     enum CalledMethod: Equatable {
-        case startView(key: String, path: String?)
+        case startView(key: String, name: String?)
         case stopView(key: String)
         case addError(message: String, source: RUMErrorSource, stack: String?)
         case startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String)
@@ -227,8 +227,8 @@ private class MockNativeRUM: NativeRUM {
     private(set) var receivedAttributes = [[String: AnyEncodable]]()
 
     // swiftlint:disable force_cast
-    func startView(key: String, path: String?, attributes: [String: Encodable]) {
-        calledMethods.append(.startView(key: key, path: path))
+    func startView(key: String, name: String?, attributes: [String: Encodable]) {
+        calledMethods.append(.startView(key: key, name: name))
         receivedAttributes.append(attributes as! [String: AnyEncodable])
     }
     func stopView(key: String, attributes: [String: Encodable]) {

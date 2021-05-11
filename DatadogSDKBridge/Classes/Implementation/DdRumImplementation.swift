@@ -9,7 +9,7 @@ import Datadog
 
 extension DDRUMMonitor: NativeRUM { }
 internal protocol NativeRUM {
-    func startView(key: String, path: String?, attributes: [String: Encodable])
+    func startView(key: String, name: String?, attributes: [String: Encodable])
     func stopView(key: String, attributes: [String: Encodable])
     func addError(message: String, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?)
     func startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String, attributes: [String: Encodable])
@@ -109,7 +109,7 @@ internal class DdRumImplementation: DdRum {
     }
 
     func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
-        nativeRUM.startView(key: key as String, path: name as String, attributes: attributes(from: context, with: timestampMs))
+        nativeRUM.startView(key: key as String, name: name as String, attributes: attributes(from: context, with: timestampMs))
     }
 
     func stopView(key: NSString, timestampMs: Int64, context: NSDictionary) {
