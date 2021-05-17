@@ -1,6 +1,6 @@
 # Set of Swift Lint rules enforced for Swift code under `Sources/*` directory
 
-whitelist_rules: # we enable lint rules explicitly - only the ones listed below are active
+only_rules: # we enable lint rules explicitly - only the ones listed below are active
   - attributes
   - closing_brace
   - closure_end_indentation
@@ -78,6 +78,15 @@ custom_rules:
     match_kinds:
       - comment
     message: "All TODOs must be followed by JIRA reference, for example: \"TODO: RUMM-123\""
+    severity: error
+  unsafe_uiapplication_shared: # prevents from using `UIApplication.shared` API
+    included: Sources
+    name: "Unsafe API: `UIApplication.shared`"
+    regex: '(UIApplication.shared)|(UIApplication = .shared)'
+    excluded_match_kinds: 
+      - comment
+      - doccomment
+    message: "`UIApplication.shared` is unavailable in some environments. Check `UIApplication.managedShared`."
     severity: error
 
 included:

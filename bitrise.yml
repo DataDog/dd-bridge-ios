@@ -1,0 +1,74 @@
+---
+format_version: '8'
+default_step_lib_source: https://github.com/bitrise-io/bitrise-steplib.git
+project_type: other
+
+workflows:
+  run_from_repo:
+    after_run:
+    - run_linter
+    - make_dependencies
+    - run_unit_tests
+    - _deploy_artifacts
+
+  _deploy_artifacts:
+    description: |-
+        Uploads artifacts to associate them with build log on Bitrise.io.
+    steps:
+    - deploy-to-bitrise-io: {}
+
+  make_dependencies:
+    description: |-
+        Does `make dependencies` to prepare source code in repo for building and testing.
+    steps:
+    - script:
+        title: Do `make dependencies`
+        inputs:
+        - content: |-
+            #!/usr/bin/env zsh
+            set -e
+            make dependencies
+
+  run_linter:
+    description: |-
+        Runs swiftlint and license check for all source and test files.
+    steps:
+    - swiftlint@0.8.0:
+        title: Lint Sources/*
+        inputs:
+        - strict: 'yes'
+        - lint_config_file: "$BITRISE_SOURCE_DIR/tools/lint/sources.swiftlint.yml"
+        - linting_path: "$BITRISE_SOURCE_DIR"
+        - reporter: emoji
+    - swiftlint@0.8.0:
+        title: Lint Tests/*
+        is_always_run: true
+        inputs:
+        - strict: 'yes'
+        - linting_path: "$BITRISE_SOURCE_DIR"
+        - lint_config_file: "$BITRISE_SOURCE_DIR/tools/lint/tests.swiftlint.yml"
+        - reporter: emoji
+    - script:
+        title: Check license headers
+        is_always_run: true
+        inputs:
+        - content: |-
+            #!/usr/bin/env bash
+            set -e
+            ./tools/license/check-license.sh
+
+  run_unit_tests:
+    description: |-
+        Runs unit tests for SDK on iOS Simulator.
+    steps:
+    - xcode-test:
+        title: Run unit tests for DatadogSDKBridge - iOS Simulator
+        inputs:
+        # NOTE: RUMM-1355 DatadogSDKBridge-Unit-Tests scheme is hidden, open `Manage Schemes` window to see it if needed
+        - scheme: DatadogSDKBridge-Unit-Tests
+        - simulator_device: iPhone 12 mini
+        - is_clean_build: 'yes'
+        # NOTE: RUMM-1355 generate_code_coverage_files with static linking results in undefined symbols errors
+        - generate_code_coverage_files: 'no'
+        - project_path: Example/Pods/Pods.xcodeproj
+        - xcpretty_test_options: --color --report html --output "${BITRISE_DEPLOY_DIR}/DatadogSDKBridge-unit-tests.html"

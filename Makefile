@@ -11,6 +11,9 @@ templates:
 		./tools/xcode-templates/install-xcode-templates.sh
 		@echo "OK 👌"
 
+dependencies:
+		cd Example && pod install
+
 bump:
 		@read -p "Enter version number: " version;  \
 		sed "s/__DATADOG_VERSION__/$$version/g" DatadogSDKBridge.podspec.src > DatadogSDKBridge.podspec; \
