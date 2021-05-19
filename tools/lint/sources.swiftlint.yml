@@ -90,5 +90,5 @@ custom_rules:
     severity: error
 
 included:
-  - DatadogSDKBridge
-  - Example/DatadogSDKBridge
+  - ../../DatadogSDKBridge
+  - ../../Example/DatadogSDKBridge

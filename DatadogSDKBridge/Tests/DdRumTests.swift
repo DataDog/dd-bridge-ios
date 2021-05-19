@@ -125,7 +125,7 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(lastAttribtutes["foo"]?.value as? Int, 123)
         XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey]?.value as? Int64, randomTimestamp)
     }
-    
+
     func testAddTiming() throws {
         rum.addTiming(name: "timing")
 

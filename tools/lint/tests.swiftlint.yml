@@ -75,4 +75,4 @@ custom_rules:
     severity: error
 
 included:
-  - DatadogSDKBridge/Tests/
+  - ../../DatadogSDKBridge/Tests/
