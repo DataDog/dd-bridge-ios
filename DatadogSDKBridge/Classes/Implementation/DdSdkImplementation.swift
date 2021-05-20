@@ -30,7 +30,7 @@ internal class DdSdkImplementation: DdSdk {
 
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)
     }
-    
+
     func setTrackingConsent(trackingConsent: NSString) {
         Datadog.set(trackingConsent: buildTrackingConsent(consent: trackingConsent))
     }
@@ -53,21 +53,21 @@ internal class DdSdkImplementation: DdSdk {
 
         switch configuration.site?.lowercased ?? "us" {
         case "us":
-            ddConfigBuilder.set(endpoint: .us)
+            _ = ddConfigBuilder.set(endpoint: .us)
         case "eu":
-            ddConfigBuilder.set(endpoint: .eu)
+            _ = ddConfigBuilder.set(endpoint: .eu)
         case "gov":
-            ddConfigBuilder.set(endpoint: .gov)
+            _ = ddConfigBuilder.set(endpoint: .gov)
         default:
-            ddConfigBuilder.set(endpoint: .us)
+            _ = ddConfigBuilder.set(endpoint: .us)
         }
-        
-        let additionalConfig: [String: Any] = configuration.additionalConfig as? [String:Any] ?? [:]
-        ddConfigBuilder.set(additionalConfiguration: additionalConfig)
+
+        let additionalConfig: [String: Any] = configuration.additionalConfig as? [String: Any] ?? [:]
+        _ = ddConfigBuilder.set(additionalConfiguration: additionalConfig)
 
         return ddConfigBuilder.build()
     }
-    
+
     func buildTrackingConsent(consent: NSString?) -> TrackingConsent {
         let trackingConsent: TrackingConsent
         switch consent?.lowercased {

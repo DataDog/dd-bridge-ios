@@ -28,46 +28,48 @@ internal class DdSdkTests: XCTestCase {
 
         try Datadog.deinitializeOrThrow()
     }
-    
+
     func testBuildConfigurationDefaultEndpoint() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
-        
+
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
-        
+
         XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
     }
-    
+
     func testBuildConfigurationUSEndpoint() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "US", trackingConsent: "pending", additionalConfig: nil)
-        
+
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
-        
+
         XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
     }
-    
+
     func testBuildConfigurationEUEndpoint() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "EU", trackingConsent: "pending", additionalConfig: nil)
-        
+
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
-        
+
         XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.eu)
     }
-    
+
     func testBuildConfigurationGOVEndpoint() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "GOV", trackingConsent: "pending", additionalConfig: nil)
-        
+
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
-        
+
         XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.gov)
     }
-    
+
     func testBuildConfigurationAdditionalConfig() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["foo": "test", "bar": 42])
-        
+
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
-        
+
+        // swiftlint:disable force_cast
         XCTAssertEqual(ddConfig.additionalConfiguration["foo"] as! String, "test")
         XCTAssertEqual(ddConfig.additionalConfiguration["bar"] as! Int, 42)
+        // swiftlint:enable force_cast
     }
 
     func testSettingUserInfo() throws {
@@ -121,40 +123,32 @@ internal class DdSdkTests: XCTestCase {
 
         try Datadog.deinitializeOrThrow()
     }
-    
+
     func testBuildTrackingConsentPending() {
-        
-        let consent:NSString? = "pending"
-        
+        let consent: NSString? = "pending"
         let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
-        
+
         XCTAssertEqual(trackingConsent, TrackingConsent.pending)
     }
-    
+
     func testBuildTrackingConsentGranted() {
-        
-        let consent:NSString? = "granted"
-        
+        let consent: NSString? = "granted"
         let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
-        
+
         XCTAssertEqual(trackingConsent, TrackingConsent.granted)
     }
-    
+
     func testBuildTrackingConsentNotGranted() {
-        
-        let consent:NSString? = "not_granted"
-        
+        let consent: NSString? = "not_granted"
         let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
-        
+
         XCTAssertEqual(trackingConsent, TrackingConsent.notGranted)
     }
-    
+
     func testBuildTrackingConsentNil() {
-        
         let consent: NSString? = nil
-        
         let trackingConsent = DdSdkImplementation().buildTrackingConsent(consent: consent)
-        
+
         XCTAssertEqual(trackingConsent, TrackingConsent.pending)
     }
 }

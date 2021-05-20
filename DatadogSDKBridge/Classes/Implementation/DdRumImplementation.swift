@@ -125,7 +125,7 @@ internal class DdRumImplementation: DdRum {
     func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
         nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
     }
-    
+
     func addTiming(name: NSString) {
         nativeRUM.addTiming(name: name as String)
     }

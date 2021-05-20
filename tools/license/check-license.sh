@@ -13,6 +13,7 @@ function files {
 		-iregex '.*\.(swift|h|m|py)$' \
 		-type f \( ! -name "Package.swift" \) \
 		-not -path "*/.build/*" \
+		-not -path "*/Example/build/*" \
 		-not -path "*Pods*" \
 		-not -path "*Carthage/Build/*" \
 		-not -path "*Carthage/Checkouts/*" \

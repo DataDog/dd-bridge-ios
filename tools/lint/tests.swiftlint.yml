@@ -1,6 +1,6 @@
 # Set of Swift Lint rules enforced for Swift code under `Tests/*` directory
 
-whitelist_rules: # we enable lint rules explicitly - only the ones listed below are active
+only_rules: # we enable lint rules explicitly - only the ones listed below are active
   - attributes
   - closing_brace
   - closure_end_indentation
@@ -75,4 +75,4 @@ custom_rules:
     severity: error
 
 included:
-  - Example/Tests
+  - ../../DatadogSDKBridge/Tests/

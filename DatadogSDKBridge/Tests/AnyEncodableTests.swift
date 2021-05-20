@@ -7,14 +7,14 @@
 import XCTest
 @testable import DatadogSDKBridge
 
-class AnyEncodableTests: XCTestCase {
+internal class AnyEncodableTests: XCTestCase {
     func testWhenWrappingAnyTypeUsingAnyEncodable_thenItGetsEncodedInExpectedFormat() throws {
         // Given
         let dictionary: [String: Any] = [
             "array": [1, 2, 3],
             "boolean": true,
             "date": Date(timeIntervalSince1970: 0),
-            "double": 3.141592653589793,
+            "double": 3.141_592_653_589_793,
             "integer": 42,
             "nested": [
                 "a": "alpha",
@@ -23,7 +23,7 @@ class AnyEncodableTests: XCTestCase {
             ],
             "null": NSNull(),
             "string": "string",
-            "url": NSURL(string: "https://datadoghq.com")!
+            "url": NSURL(string: "https://datadoghq.com") as Any
         ]
 
         // When
