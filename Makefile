@@ -22,5 +22,6 @@ bump:
 		echo Bumped version to $$version
 
 ship:
+		pod trunk me
 		pod spec lint --allow-warnings DatadogSDKBridge.podspec
 		pod trunk push --allow-warnings DatadogSDKBridge.podspec

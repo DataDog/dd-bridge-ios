@@ -6,10 +6,19 @@ project_type: other
 workflows:
   run_from_repo:
     after_run:
-    - run_linter
     - make_dependencies
+    - run_linter
     - run_unit_tests
     - _deploy_artifacts
+
+  tagged_commit:
+    after_run:
+    - make_dependencies
+    - run_linter
+    - run_unit_tests
+    - ship
+    - _deploy_artifacts
+    - _notify_failure_on_slack
 
   _deploy_artifacts:
     description: |-
@@ -72,3 +81,36 @@ workflows:
         - generate_code_coverage_files: 'no'
         - project_path: Example/Pods/Pods.xcodeproj
         - xcpretty_test_options: --color --report html --output "${BITRISE_DEPLOY_DIR}/DatadogSDKBridge-unit-tests.html"
+
+  ship:
+    description: |-
+        Ships the tagged version to Cocoapods trunk and uploads binaries to Github.
+    steps:
+    - script:
+        title: Ship tagged version
+        inputs:
+        - content: |-
+            #!/usr/bin/env zsh
+            set -e
+            make ship
+
+  _notify_failure_on_slack:
+    description: |-
+        Notifies any (previous) workflow failure on Slack.
+        Should be used to notify failures for workflows which do not report back to GitHub check.
+    steps:
+    - slack:
+        is_always_run: true
+        run_if: .IsBuildFailed
+        inputs:
+        - channel: '#dd-sdk-ios'
+        - buttons: |-
+            See Bitrise log|${BITRISE_BUILD_URL}
+        - pretext: |-
+            ⚠️ Bitrise build failed.
+        - color_on_error: '#FF0000'
+        - author_name: ''
+        - message: ''
+        - message_on_error: 'dd-bridge-ios failed to ship!'
+        - icon_url: 'https://avatars.githubusercontent.com/t/3555052?s=128&v=4'
+        - webhook_url: '${SLACK_INCOMING_WEBHOOK_MOBILE_CI}'
