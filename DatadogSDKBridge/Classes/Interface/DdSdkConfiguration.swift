@@ -17,6 +17,7 @@ import Foundation
      - site: The Datadog site of your organization (can be 'US', 'EU' or 'GOV', default is 'US').
      - trackingConsent: Consent, which can take one of the following values: 'pending', 'granted', 'not_granted'.
      - additionalConfig: Additional configuration parameters.
+     - manualTracingEnabled: Whether the SDK should enable tracer to be able to submit spans from the user (default is false).
  */
 @objc(DdSdkConfiguration)
 public class DdSdkConfiguration: NSObject {
@@ -28,6 +29,7 @@ public class DdSdkConfiguration: NSObject {
     public var site: NSString? = nil
     public var trackingConsent: NSString? = nil
     public var additionalConfig: NSDictionary? = nil
+    public var manualTracingEnabled: Bool? = nil
 
     public init(
         clientToken: NSString,
@@ -37,7 +39,8 @@ public class DdSdkConfiguration: NSObject {
         sampleRate: Double?,
         site: NSString?,
         trackingConsent: NSString?,
-        additionalConfig: NSDictionary?
+        additionalConfig: NSDictionary?,
+        manualTracingEnabled: Bool?
     ) {
         self.clientToken = clientToken
         self.env = env
@@ -47,5 +50,6 @@ public class DdSdkConfiguration: NSObject {
         self.site = site
         self.trackingConsent = trackingConsent
         self.additionalConfig = additionalConfig
+        self.manualTracingEnabled = manualTracingEnabled
     }
 }
