@@ -16,7 +16,7 @@ internal class DdRumTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        rum = DdRumImplementation(mockNativeRUM)
+        rum = DdRumImplementation { self.mockNativeRUM }
     }
 
     func testInternalTimestampKeyValue() {

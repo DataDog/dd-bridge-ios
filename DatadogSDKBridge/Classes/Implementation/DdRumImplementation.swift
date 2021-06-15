@@ -95,17 +95,18 @@ internal class DdRumImplementation: DdRum {
     internal static let firstByteTimingKey = "firstByte"
     internal static let downloadTimingKey = "download"
 
-    let nativeRUM: NativeRUM
+    lazy var nativeRUM: NativeRUM = rumProvider()
+    private let rumProvider: () -> NativeRUM
 
     private typealias UserAction = (type: RUMUserActionType, name: String?)
     private var ongoingUserActions = [UserAction]()
 
-    internal init(_ nativeRUM: NativeRUM) {
-        self.nativeRUM = nativeRUM
+    internal init(_ rumProvider: @escaping () -> NativeRUM) {
+        self.rumProvider = rumProvider
     }
 
     convenience init() {
-        self.init(RUMMonitor.initialize())
+        self.init { RUMMonitor.initialize() }
     }
 
     func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {

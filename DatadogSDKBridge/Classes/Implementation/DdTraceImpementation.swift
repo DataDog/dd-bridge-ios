@@ -8,15 +8,16 @@ import Foundation
 import Datadog
 
 internal class DdTraceImpementation: DdTrace {
-    private let tracer: OTTracer
+    private lazy var tracer: OTTracer = tracerProvider()
+    private let tracerProvider: () -> OTTracer
     private(set) var spanDictionary = [NSString: OTSpan]()
 
-    internal init(_ ddTracer: OTTracer) {
-        self.tracer = ddTracer
+    internal init(_ tracerProvider: @escaping () -> OTTracer) {
+        self.tracerProvider = tracerProvider
     }
 
     convenience init() {
-        self.init(Tracer.initialize(configuration: Tracer.Configuration()))
+        self.init { Tracer.initialize(configuration: Tracer.Configuration()) }
     }
 
     func startSpan(operation: NSString, timestampMs: Int64, context: NSDictionary) -> NSString {

@@ -14,7 +14,7 @@ internal class DdTraceTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        tracer = DdTraceImpementation(mockNativeTracer)
+        tracer = DdTraceImpementation { self.mockNativeTracer }
     }
 
     private let testTags = NSDictionary(

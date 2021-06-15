@@ -9,7 +9,7 @@ import XCTest
 
 internal class DdLogsTests: XCTestCase {
     private let mockNativeLogger = MockNativeLogger()
-    private lazy var logger = DdLogsImplementation(mockNativeLogger)
+    private lazy var logger = DdLogsImplementation { self.mockNativeLogger }
 
     private let testMessage_swift: String = "message"
     private let testMessage_objc: NSString = "message"
