@@ -25,6 +25,22 @@ internal class DdTraceTests: XCTestCase {
         ]
     )
 
+    func testItInitializesNativeTracerOnlyOnce() {
+        // Given
+        let expectation = self.expectation(description: "Initialize Tracer once")
+
+        let tracer = DdTraceImpementation { [unowned self] in
+            expectation.fulfill()
+            return self.mockNativeTracer
+        }
+
+        // When
+        (0..<10).forEach { _ in _ = tracer.startSpan(operation: "foo", timestampMs: 1_337, context: [:]) }
+
+        // Then
+        waitForExpectations(timeout: 0.5, handler: nil)
+    }
+
     func testStartingASpan() throws {
         let timestampInMiliseconds = Date.timeIntervalBetween1970AndReferenceDate * 1_000
         let spanID = tracer.startSpan(
