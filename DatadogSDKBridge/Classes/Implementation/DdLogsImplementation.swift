@@ -16,17 +16,18 @@ internal protocol NativeLogger {
 }
 
 public class DdLogsImplementation: DdLogs {
-    private let logger: NativeLogger
+    private lazy var logger: NativeLogger = loggerProvider()
+    private let loggerProvider: () -> NativeLogger
 
-    internal init(_ ddLogger: NativeLogger) {
-        self.logger = ddLogger
+    internal init(_ loggerProvider: @escaping () -> NativeLogger) {
+        self.loggerProvider = loggerProvider
     }
 
     public convenience init() {
         let builder = Logger.builder
             .sendNetworkInfo(true)
             .printLogsToConsole(true)
-        self.init(builder.build())
+        self.init { builder.build() }
     }
 
     public func debug(message: NSString, context: NSDictionary) {

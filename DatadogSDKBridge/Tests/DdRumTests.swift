@@ -16,7 +16,23 @@ internal class DdRumTests: XCTestCase {
 
     override func setUpWithError() throws {
         try super.setUpWithError()
-        rum = DdRumImplementation(mockNativeRUM)
+        rum = DdRumImplementation { self.mockNativeRUM }
+    }
+
+    func testItInitializesNativeRumOnlyOnce() {
+        // Given
+        let expectation = self.expectation(description: "Initialize RUM once")
+
+        let rum = DdRumImplementation { [unowned self] in
+            expectation.fulfill()
+            return self.mockNativeRUM
+        }
+
+        // When
+        (0..<10).forEach { _ in rum.addTiming(name: "foo") }
+
+        // Then
+        waitForExpectations(timeout: 0.5, handler: nil)
     }
 
     func testInternalTimestampKeyValue() {

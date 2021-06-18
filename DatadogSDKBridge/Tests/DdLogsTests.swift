@@ -9,7 +9,7 @@ import XCTest
 
 internal class DdLogsTests: XCTestCase {
     private let mockNativeLogger = MockNativeLogger()
-    private lazy var logger = DdLogsImplementation(mockNativeLogger)
+    private lazy var logger = DdLogsImplementation { self.mockNativeLogger }
 
     private let testMessage_swift: String = "message"
     private let testMessage_objc: NSString = "message"
@@ -20,6 +20,22 @@ internal class DdLogsTests: XCTestCase {
     private let invalidTestAttributes = NSDictionary(
         dictionary: ["key1": "value", 123: "value2"]
     )
+
+    func testItInitializesNativeLoggerOnlyOnce() {
+        // Given
+        let expectation = self.expectation(description: "Initialize logger once")
+
+        let logger = DdLogsImplementation { [unowned self] in
+            expectation.fulfill()
+            return self.mockNativeLogger
+        }
+
+        // When
+        (0..<10).forEach { _ in logger.debug(message: "foo", context: [:]) }
+
+        // Then
+        waitForExpectations(timeout: 0.5, handler: nil)
+    }
 
     func testLoggerDebug_validAttributes() throws {
         logger.debug(message: testMessage_objc, context: validTestAttributes_objc)
