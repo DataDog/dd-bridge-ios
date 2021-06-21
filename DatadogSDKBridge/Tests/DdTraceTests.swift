@@ -42,10 +42,10 @@ internal class DdTraceTests: XCTestCase {
     }
 
     func testStartingASpan() throws {
-        let timestampInMiliseconds = Date.timeIntervalBetween1970AndReferenceDate * 1_000
+        let timestampInMilliseconds = Date.timeIntervalBetween1970AndReferenceDate * 1_000
         let spanID = tracer.startSpan(
             operation: "test_span",
-            timestampMs: Int64(timestampInMiliseconds),
+            timestampMs: Int64(timestampInMilliseconds),
             context: testTags
         )
 
@@ -63,7 +63,7 @@ internal class DdTraceTests: XCTestCase {
     }
 
     func testFinishingASpan() throws {
-        let startDate = Date(timeIntervalSinceReferenceDate: 0.0)
+        let startDate = Date(timeIntervalSinceReferenceDate: 42.042)
         let timestampMs = Int64(startDate.timeIntervalSince1970 * 1_000)
         let spanID = tracer.startSpan(
             operation: "test_span",
@@ -75,14 +75,18 @@ internal class DdTraceTests: XCTestCase {
         let startedSpan = try XCTUnwrap(mockNativeTracer.startedSpans.last)
         XCTAssertEqual(startedSpan.finishTime, MockSpan.unfinished)
 
-        let spanDuration: TimeInterval = 10.0
-        let spanDurationMs = Int64(spanDuration) * 1_000
+        let spanDuration: TimeInterval = 10.042
+        let spanDurationMs = Int64(spanDuration * 1_000)
         let finishTimestampMs = timestampMs + spanDurationMs
         let finishingContext = NSDictionary(dictionary: ["last_key": "last_value"])
         tracer.finishSpan(spanId: spanID, timestampMs: finishTimestampMs, context: finishingContext)
 
         XCTAssertEqual(Array(tracer.spanDictionary.keys), [])
-        XCTAssertEqual(startedSpan.finishTime, startDate + spanDuration)
+        XCTAssertEqual(
+            startedSpan.finishTime!.timeIntervalSince1970, // swiftlint:disable:this force_unwrapping
+            (startDate + spanDuration).timeIntervalSince1970,
+            accuracy: 0.001
+        )
         let tags = try XCTUnwrap(startedSpan.tags as? [String: AnyEncodable])
         XCTAssertEqual(tags["last_key"]?.value as? String, "last_value")
     }

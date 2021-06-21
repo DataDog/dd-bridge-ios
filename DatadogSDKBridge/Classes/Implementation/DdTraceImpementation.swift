@@ -44,8 +44,8 @@ internal class DdTraceImpementation: DdTrace {
 
         if let span = optionalSpan {
             set(tags: context, to: span)
-            let timestampInSeconds = TimeInterval(timestampMs / 1_000)
-            span.finish(at: Date(timeIntervalSince1970: timestampInSeconds))
+            let timeIntervalSince1970: TimeInterval = Double(timestampMs) / 1_000
+            span.finish(at: Date(timeIntervalSince1970: timeIntervalSince1970))
         }
     }
 
