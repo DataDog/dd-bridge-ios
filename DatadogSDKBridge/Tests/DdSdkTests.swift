@@ -24,7 +24,7 @@ internal class DdSdkTests: XCTestCase {
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
-        XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.")
+        XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.🔥 Datadog SDK usage error: The `RUMMonitor` instance was already created. Use existing `Global.rum` instead of initializing the `RUMMonitor` another time.")
 
         try Datadog.deinitializeOrThrow()
     }

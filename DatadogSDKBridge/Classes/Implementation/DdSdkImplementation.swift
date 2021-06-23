@@ -12,6 +12,8 @@ internal class DdSdkImplementation: DdSdk {
         let ddConfig = buildConfiguration(configuration: configuration)
         let consent = buildTrackingConsent(consent: configuration.trackingConsent)
         Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: consent, configuration: ddConfig)
+
+        Global.rum = RUMMonitor.initialize()
     }
 
     func setAttributes(attributes: NSDictionary) {

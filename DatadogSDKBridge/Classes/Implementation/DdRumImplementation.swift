@@ -106,7 +106,7 @@ internal class DdRumImplementation: DdRum {
     }
 
     convenience init() {
-        self.init { RUMMonitor.initialize() }
+        self.init { Global.rum }
     }
 
     func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
