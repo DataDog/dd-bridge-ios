@@ -9,6 +9,8 @@ import Datadog
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
+        setVerbosityLevel(additionalConfig: configuration.additionalConfig)
+
         let ddConfig = buildConfiguration(configuration: configuration)
         let consent = buildTrackingConsent(consent: configuration.trackingConsent)
         Datadog.initialize(appContext: Datadog.AppContext(), trackingConsent: consent, configuration: ddConfig)
@@ -83,5 +85,21 @@ internal class DdSdkImplementation: DdSdk {
             trackingConsent = .pending
         }
         return trackingConsent
+    }
+
+    func setVerbosityLevel(additionalConfig: NSDictionary?) {
+        let verbosityLevel = (additionalConfig?["_dd.sdk_verbosity"]) as? NSString
+        switch verbosityLevel?.lowercased {
+        case "debug":
+            Datadog.verbosityLevel = .debug
+        case "info":
+            Datadog.verbosityLevel = .info
+        case "warn":
+            Datadog.verbosityLevel = .warn
+        case "error":
+            Datadog.verbosityLevel = .error
+        default:
+            Datadog.verbosityLevel = nil
+        }
     }
 }

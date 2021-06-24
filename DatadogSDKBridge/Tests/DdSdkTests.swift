@@ -29,6 +29,66 @@ internal class DdSdkTests: XCTestCase {
         try Datadog.deinitializeOrThrow()
     }
 
+    func testSDKInitializationWithVerbosityDebug() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "debug"])
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertEqual(Datadog.verbosityLevel, LogLevel.debug)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSDKInitializationWithVerbosityInfo() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "info"])
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertEqual(Datadog.verbosityLevel, LogLevel.info)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSDKInitializationWithVerbosityWarn() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "warn"])
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertEqual(Datadog.verbosityLevel, LogLevel.warn)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSDKInitializationWithVerbosityError() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "error"])
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertEqual(Datadog.verbosityLevel, LogLevel.error)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSDKInitializationWithVerbosityNil() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertNil(Datadog.verbosityLevel)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
+    func testSDKInitializationWithVerbosityUnknown() throws {
+        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "foo"])
+
+        DdSdkImplementation().initialize(configuration: validConfiguration)
+
+        XCTAssertNil(Datadog.verbosityLevel)
+
+        try Datadog.deinitializeOrThrow()
+    }
+
     func testBuildConfigurationDefaultEndpoint() {
         let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
 
