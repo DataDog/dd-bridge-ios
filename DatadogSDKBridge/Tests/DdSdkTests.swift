@@ -29,6 +29,30 @@ internal class DdSdkTests: XCTestCase {
         try Datadog.deinitializeOrThrow()
     }
 
+    func testBuildConfigurationNoUIKitByDefault() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNil(ddConfig.rumUIKitViewsPredicate)
+    }
+
+    func testBuildConfigurationUIKitTrackingDisabled() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.native_view_tracking": false])
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNil(ddConfig.rumUIKitViewsPredicate)
+    }
+
+    func testBuildConfigurationUIKitTrackingEnabled() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.native_view_tracking": true])
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNotNil(ddConfig.rumUIKitViewsPredicate)
+    }
+
     func testSDKInitializationWithVerbosityDebug() throws {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "debug"])
 

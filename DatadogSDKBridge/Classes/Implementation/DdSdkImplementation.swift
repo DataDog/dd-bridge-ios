@@ -69,6 +69,11 @@ internal class DdSdkImplementation: DdSdk {
         let additionalConfig: [String: Any] = configuration.additionalConfig as? [String: Any] ?? [:]
         _ = ddConfigBuilder.set(additionalConfiguration: additionalConfig)
 
+        let enableViewTracking = additionalConfig["_dd.native_view_tracking"] as? Bool
+        if enableViewTracking == true {
+            _ = ddConfigBuilder.trackUIKitRUMViews()
+        }
+
         return ddConfigBuilder.build()
     }
 
