@@ -6,15 +6,52 @@
 
 import Foundation
 
-internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: AnyEncodable] {
+internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: Encodable] {
     return castAttributesToSwift(attributes as? [String: Any] ?? [:])
 }
 
-internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: AnyEncodable] {
-    return attributes.mapValues { AnyEncodable($0) }
+internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: Encodable] {
+    var casted: [String: Encodable] = [:]
+
+    attributes.forEach { key, value in
+        if key.hasPrefix("_dd.") {
+            casted[key] = castInternalAttribute(value: value)
+        } else {
+            casted[key] = castUserAttribute(value: value)
+        }
+    }
+
+    return casted
+}
+
+/// Casts `Any` value to `Encodable?` by inspecting and unpacking its value.
+/// This is necessary to handle values passed from Objective-C, which cannot be casted directly (they return `nil` for `as? Encodable`).
+///
+/// **Note**: It only supports selected primitive, non-sequence types.
+private func castInternalAttribute(value: Any) -> Encodable? {
+    switch value {
+    case let string as String: // unpacking `NSTaggedPointerString`
+        return string
+    case let int64 as Int64: // unpacking `__NSCFNumber`
+        return int64
+    case let double as Double: // unpacking `__NSCFNumber` again; trying `Double` after `Int` as it's a wider type
+        return double
+    default:
+        return nil
+    }
+}
+
+/// Casts `Any` value to `Encodable` by wrapping it into `AnyEncodable` type erasure.
+/// Ulike explicit casting implemented in `castUserAttribute`, this works for wider range of types, including sequences.
+private func castUserAttribute(value: Any) -> Encodable? {
+    return AnyEncodable(value)
 }
 
 /// Type erasing `Encodable` wrapper to bridge Objective-C's `Any` to Swift `Encodable`.
+///
+/// We cannot do it with `value as? Encodable` as values received from Objective-C are baked with special types, like
+/// `NSTaggedPointerString`, `__NSCFNumber` or `Swift.__SwiftDeferredNSArray`. Those when casted with
+/// just `as? Encodable` result with `nil`.
 ///
 /// Inspired by `AnyCodable` by Flight-School (MIT):
 /// https://github.com/Flight-School/AnyCodable/blob/master/Sources/AnyCodable/AnyEncodable.swift
