@@ -10,12 +10,13 @@ import XCTest
 internal class AnyEncodableTests: XCTestCase {
     // MARK: - Casting attributes
 
-    func testWhenCastingUserAttributes_thenItWrapsThemInAnyEncodableContainer() throws {
+    func testWhenCastingAttributes_thenItPreservesTypeInformationForKnownTypes() throws {
         // Given
-        let userAttributes = NSDictionary(
+        let attributes = NSDictionary(
             dictionary: [
                 "array": [1, 2, 3],
-                "boolean": true,
+                "boolean-true": true,
+                "boolean-false": false,
                 "date": Date(timeIntervalSince1970: 123),
                 "double": 3.141_592_653_589_793,
                 "integer": 42,
@@ -31,46 +32,46 @@ internal class AnyEncodableTests: XCTestCase {
         )
 
         // When
-        let castedAttributes = castAttributesToSwift(userAttributes)
+        let castedAttributes = castAttributesToSwift(attributes)
 
         // Then
-        XCTAssertEqual(castedAttributes.count, userAttributes.count)
-        XCTAssertEqual((castedAttributes["array"] as? AnyEncodable)?.value as? [Int], [1, 2, 3])
-        XCTAssertEqual((castedAttributes["boolean"] as? AnyEncodable)?.value as? Bool, true)
-        XCTAssertEqual((castedAttributes["date"] as? AnyEncodable)?.value as? Date, Date(timeIntervalSince1970: 123))
-        XCTAssertEqual((castedAttributes["double"] as? AnyEncodable)?.value as? Double, 3.141_592_653_589_793)
-        XCTAssertEqual((castedAttributes["integer"] as? AnyEncodable)?.value as? Int, 42)
-        XCTAssertEqual((castedAttributes["nested"] as? AnyEncodable)?.value as? [String: String], ["a": "alpha", "b": "bravo", "c": "charlie"])
-        XCTAssertEqual((castedAttributes["null"] as? AnyEncodable)?.value as? NSNull, NSNull())
-        XCTAssertEqual((castedAttributes["string"] as? AnyEncodable)?.value as? String, "string")
-        XCTAssertEqual((castedAttributes["url"] as? AnyEncodable)?.value as? URL, URL(string: "https://datadoghq.com"))
-    }
+        XCTAssertEqual(castedAttributes.count, attributes.count)
+        XCTAssertEqual(castedAttributes["boolean-true"] as? Bool, true, "It preserves Bool type information")
+        XCTAssertEqual(castedAttributes["boolean-false"] as? Bool, false, "It preserves Bool type information")
+        XCTAssertEqual(castedAttributes["double"] as? Double, 3.141_592_653_589_793, "It preserves Double type information")
+        XCTAssertEqual(castedAttributes["integer"] as? Int64, 42, "It preserves Int64 type information")
+        XCTAssertEqual(castedAttributes["string"] as? String, "string", "It preserves String type information")
 
-    func testWhenCastingInternalAttributes_thenItDoesNotEreaseItsType() throws {
-        // Given
-        let userAttributes = NSDictionary(
-            dictionary: [
-                "_dd.string": "string",
-                "_dd.boolean": true,
-                "_dd.double": 3.141_592_653_589_793,
-                "_dd.integer": 42,
-            ]
+        XCTAssertEqual(
+            (castedAttributes["array"] as? AnyEncodable)?.value as? [Int],
+            [1, 2, 3],
+            "It ereases [Int] type information, but preserves value"
         )
-
-        // When
-        let castedAttributes = castAttributesToSwift(userAttributes)
-
-        // Then
-        XCTAssertEqual(castedAttributes.count, userAttributes.count)
-        XCTAssertEqual(castedAttributes["_dd.string"] as? String, "string")
-        XCTAssertEqual(castedAttributes["_dd.boolean"] as? Int64, 1, "Boolean value must be casted to `Int64`")
-        XCTAssertEqual(castedAttributes["_dd.double"] as? Double, 3.141_592_653_589_793)
-        XCTAssertEqual(castedAttributes["_dd.integer"] as? Int64, 42)
+        XCTAssertEqual(
+            (castedAttributes["date"] as? AnyEncodable)?.value as? Date,
+            Date(timeIntervalSince1970: 123),
+            "It ereases Date type information, but preserves value"
+        )
+        XCTAssertEqual(
+            (castedAttributes["nested"] as? AnyEncodable)?.value as? [String: String],
+            ["a": "alpha", "b": "bravo", "c": "charlie"],
+            "It ereases [String: String] type information, but preserves value"
+        )
+        XCTAssertEqual(
+            (castedAttributes["null"] as? AnyEncodable)?.value as? NSNull,
+            NSNull(),
+            "It ereases NSNull type information, but preserves value"
+        )
+        XCTAssertEqual(
+            (castedAttributes["url"] as? AnyEncodable)?.value as? URL,
+            URL(string: "https://datadoghq.com"),
+            "It ereases NSURL type information, but preserves value"
+        )
     }
 
     // MARK: - Encoding
 
-    func testWhenWrappingUserAttributesInAnyEncodable_thenTheyGetEncodedInExpectedFormat() throws {
+    func testWhenEreasingTypeInformation_thenItPreservesDataRepresentationWhenEncoding() throws {
         // Given
         let dictionary: [String: Any] = [
             "array": [1, 2, 3],

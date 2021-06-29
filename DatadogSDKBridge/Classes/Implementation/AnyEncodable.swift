@@ -14,44 +14,62 @@ internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: Enc
     var casted: [String: Encodable] = [:]
 
     attributes.forEach { key, value in
-        if key.hasPrefix("_dd.") {
-            casted[key] = castInternalAttribute(value: value)
+        if let castedValue = castByPreservingTypeInformation(attributeValue: value) {
+            // If possible, cast attribute by preserving its type information
+            casted[key] = castedValue
         } else {
-            casted[key] = castUserAttribute(value: value)
+            // Otherwise, cast by preserving its encoded value (and loosing type information)
+            casted[key] = castByPreservingEncodedValue(attributeValue: value)
         }
     }
 
     return casted
 }
 
-/// Casts `Any` value to `Encodable?` by inspecting and unpacking its value.
-/// This is necessary to handle values passed from Objective-C, which cannot be casted directly (they return `nil` for `as? Encodable`).
-///
-/// **Note**: It only supports selected primitive, non-sequence types.
-private func castInternalAttribute(value: Any) -> Encodable? {
-    switch value {
+/// Casts `Any` value to `Encodable` by preserving its type information.
+private func castByPreservingTypeInformation(attributeValue: Any) -> Encodable? {
+    switch attributeValue {
     case let string as String: // unpacking `NSTaggedPointerString`
-        return string
-    case let int64 as Int64: // unpacking `__NSCFNumber`
-        return int64
-    case let double as Double: // unpacking `__NSCFNumber` again; trying `Double` after `Int` as it's a wider type
-        return double
+        return string // cast to String
+    case let number as NSNumber: // unpacking `__NSCFNumber`
+        switch CFNumberGetType(number) {
+        case .charType:
+            return number.boolValue // cast to Bool
+        case .sInt8Type:
+            return number.int8Value // cast to Int8
+        case .sInt16Type:
+            return number.int16Value // cast to Int16
+        case .sInt32Type:
+            return number.int32Value // cast to Int32
+        case .sInt64Type:
+            return number.int64Value // cast to Int64
+        case .shortType:
+            return number.uint16Value // cast to UInt 16
+        case .longType:
+            return number.uint32Value // cast to UInt32
+        case .longLongType:
+            return number.uint64Value // cast to UInt64
+        case .intType, .nsIntegerType, .cfIndexType:
+            return number.intValue // cast to Int
+        case .floatType, .float32Type:
+            return number.floatValue // cast to Float
+        case .doubleType, .float64Type, .cgFloatType:
+            return number.doubleValue // cast to Double
+        @unknown default:
+            return nil
+        }
     default:
         return nil
     }
 }
 
-/// Casts `Any` value to `Encodable` by wrapping it into `AnyEncodable` type erasure.
-/// Ulike explicit casting implemented in `castUserAttribute`, this works for wider range of types, including sequences.
-private func castUserAttribute(value: Any) -> Encodable? {
-    return AnyEncodable(value)
+/// Casts `Any` value to `Encodable` ereasing its type information, but preserving data representation
+/// when value gets encoded.
+private func castByPreservingEncodedValue(attributeValue: Any) -> Encodable {
+    return AnyEncodable(attributeValue)
 }
 
 /// Type erasing `Encodable` wrapper to bridge Objective-C's `Any` to Swift `Encodable`.
-///
-/// We cannot do it with `value as? Encodable` as values received from Objective-C are baked with special types, like
-/// `NSTaggedPointerString`, `__NSCFNumber` or `Swift.__SwiftDeferredNSArray`. Those when casted with
-/// just `as? Encodable` result with `nil`.
 ///
 /// Inspired by `AnyCodable` by Flight-School (MIT):
 /// https://github.com/Flight-School/AnyCodable/blob/master/Sources/AnyCodable/AnyEncodable.swift

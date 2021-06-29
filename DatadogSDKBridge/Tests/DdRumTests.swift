@@ -45,10 +45,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startView(key: "view key", name: "view name"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStopView() throws {
@@ -57,10 +57,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopView(key: "view key"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStartAction() throws {
@@ -69,10 +69,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startUserAction(type: .custom, name: "action name"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStopActionWithoutStarting() {
@@ -88,10 +88,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 2)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopUserAction(type: .custom, name: "action name"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 2)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testAddAction() throws {
@@ -100,10 +100,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .addUserAction(type: .scroll, name: "action name"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStartResource() throws {
@@ -112,10 +112,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startResourceLoading(resourceKey: "resource key", httpMethod: .put, urlString: "some/url/string"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStopResource() throws {
@@ -124,10 +124,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testStopResourceWithExternalTimings() throws {
@@ -207,10 +207,10 @@ internal class DdRumTests: XCTestCase {
 
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 2)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testAddError() throws {
@@ -219,10 +219,10 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .addError(message: "error message", source: .webview, stack: "error trace"))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
-        let lastAttribtutes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
-        XCTAssertEqual(lastAttribtutes.count, 2)
-        XCTAssertEqual((lastAttribtutes["foo"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual(lastAttribtutes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
     }
 
     func testAddTiming() throws {
