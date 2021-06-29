@@ -153,9 +153,9 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(receivedUserInfo.id, "abc-123")
         XCTAssertEqual(receivedUserInfo.name, "John Doe")
         XCTAssertEqual(receivedUserInfo.email, "john@doe.com")
-        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-1"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-2"] as? AnyEncodable)?.value as? String, "abc")
-        XCTAssertEqual((receivedUserInfo.extraInfo["extra-info-3"] as? AnyEncodable)?.value as? Bool, true)
+        XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-1"] as? Int64, 123)
+        XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-2"] as? String, "abc")
+        XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-3"] as? Bool, true)
 
         try Datadog.deinitializeOrThrow()
     }
@@ -177,9 +177,9 @@ internal class DdSdkTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-1"] as? AnyEncodable)?.value as? Int, 123)
-        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-2"] as? AnyEncodable)?.value as? String, "abc")
-        XCTAssertEqual((rumMonitorMock.receivedAttributes["attribute-3"] as? AnyEncodable)?.value as? Bool, true)
+        XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-1"] as? Int64, 123)
+        XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-2"] as? String, "abc")
+        XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-3"] as? Bool, true)
 
         try Datadog.deinitializeOrThrow()
     }

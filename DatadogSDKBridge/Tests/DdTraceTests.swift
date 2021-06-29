@@ -56,10 +56,10 @@ internal class DdTraceTests: XCTestCase {
         XCTAssertNil(startedSpan.parent)
         let startDate = Date(timeIntervalSince1970: Date.timeIntervalBetween1970AndReferenceDate)
         XCTAssertEqual(startedSpan.startTime, startDate)
-        let tags = try XCTUnwrap(startedSpan.tags as? [String: AnyEncodable])
-        XCTAssertEqual(tags["key_string"]?.value as? String, "value")
-        XCTAssertEqual(tags["key_number"]?.value as? Int, 123)
-        XCTAssertEqual(tags["key_bool"]?.value as? Bool, true)
+        let tags = try XCTUnwrap(startedSpan.tags)
+        XCTAssertEqual(tags["key_string"] as? String, "value")
+        XCTAssertEqual(tags["key_number"] as? Int64, 123)
+        XCTAssertEqual(tags["key_bool"] as? Bool, true)
     }
 
     func testFinishingASpan() throws {
@@ -87,8 +87,8 @@ internal class DdTraceTests: XCTestCase {
             (startDate + spanDuration).timeIntervalSince1970,
             accuracy: 0.001
         )
-        let tags = try XCTUnwrap(startedSpan.tags as? [String: AnyEncodable])
-        XCTAssertEqual(tags["last_key"]?.value as? String, "last_value")
+        let tags = try XCTUnwrap(startedSpan.tags)
+        XCTAssertEqual(tags["last_key"] as? String, "last_value")
     }
 
     func testFinishingInexistentSpan() {

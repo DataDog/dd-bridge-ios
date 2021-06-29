@@ -27,9 +27,9 @@ internal class DdSdkImplementation: DdSdk {
 
     func setUser(user: NSDictionary) {
         var castedUser = castAttributesToSwift(user)
-        let id = castedUser.removeValue(forKey: "id")?.value as? String
-        let name = castedUser.removeValue(forKey: "name")?.value as? String
-        let email = castedUser.removeValue(forKey: "email")?.value as? String
+        let id = castedUser.removeValue(forKey: "id") as? String
+        let name = castedUser.removeValue(forKey: "name") as? String
+        let email = castedUser.removeValue(forKey: "email") as? String
         let extraInfo: [String: Encodable] = castedUser // everything what's left is an `extraInfo`
 
         Datadog.setUserInfo(id: id, name: name, email: email, extraInfo: extraInfo)

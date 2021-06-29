@@ -6,12 +6,67 @@
 
 import Foundation
 
-internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: AnyEncodable] {
+internal func castAttributesToSwift(_ attributes: NSDictionary) -> [String: Encodable] {
     return castAttributesToSwift(attributes as? [String: Any] ?? [:])
 }
 
-internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: AnyEncodable] {
-    return attributes.mapValues { AnyEncodable($0) }
+internal func castAttributesToSwift(_ attributes: [String: Any]) -> [String: Encodable] {
+    var casted: [String: Encodable] = [:]
+
+    attributes.forEach { key, value in
+        if let castedValue = castByPreservingTypeInformation(attributeValue: value) {
+            // If possible, cast attribute by preserving its type information
+            casted[key] = castedValue
+        } else {
+            // Otherwise, cast by preserving its encoded value (and loosing type information)
+            casted[key] = castByPreservingEncodedValue(attributeValue: value)
+        }
+    }
+
+    return casted
+}
+
+/// Casts `Any` value to `Encodable` by preserving its type information.
+private func castByPreservingTypeInformation(attributeValue: Any) -> Encodable? {
+    switch attributeValue {
+    case let string as String: // unpacking `NSTaggedPointerString`
+        return string // cast to String
+    case let number as NSNumber: // unpacking `__NSCFNumber`
+        switch CFNumberGetType(number) {
+        case .charType:
+            return number.boolValue // cast to Bool
+        case .sInt8Type:
+            return number.int8Value // cast to Int8
+        case .sInt16Type:
+            return number.int16Value // cast to Int16
+        case .sInt32Type:
+            return number.int32Value // cast to Int32
+        case .sInt64Type:
+            return number.int64Value // cast to Int64
+        case .shortType:
+            return number.uint16Value // cast to UInt 16
+        case .longType:
+            return number.uint32Value // cast to UInt32
+        case .longLongType:
+            return number.uint64Value // cast to UInt64
+        case .intType, .nsIntegerType, .cfIndexType:
+            return number.intValue // cast to Int
+        case .floatType, .float32Type:
+            return number.floatValue // cast to Float
+        case .doubleType, .float64Type, .cgFloatType:
+            return number.doubleValue // cast to Double
+        @unknown default:
+            return nil
+        }
+    default:
+        return nil
+    }
+}
+
+/// Casts `Any` value to `Encodable` ereasing its type information, but preserving data representation
+/// when value gets encoded.
+private func castByPreservingEncodedValue(attributeValue: Any) -> Encodable {
+    return AnyEncodable(attributeValue)
 }
 
 /// Type erasing `Encodable` wrapper to bridge Objective-C's `Any` to Swift `Encodable`.
