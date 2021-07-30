@@ -26,7 +26,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.🔥 Datadog SDK usage error: The `RUMMonitor` instance was already created. Use existing `Global.rum` instead of initializing the `RUMMonitor` another time.")
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testBuildConfigurationNoUIKitByDefault() {
@@ -60,7 +60,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.debug)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSDKInitializationWithVerbosityInfo() throws {
@@ -70,7 +70,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.info)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSDKInitializationWithVerbosityWarn() throws {
@@ -80,7 +80,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.warn)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSDKInitializationWithVerbosityError() throws {
@@ -90,7 +90,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.error)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSDKInitializationWithVerbosityNil() throws {
@@ -100,7 +100,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertNil(Datadog.verbosityLevel)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSDKInitializationWithVerbosityUnknown() throws {
@@ -110,7 +110,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertNil(Datadog.verbosityLevel)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testBuildConfigurationDefaultEndpoint() {
@@ -181,7 +181,7 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-2"] as? String, "abc")
         XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-3"] as? Bool, true)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testSettingAttributes() throws {
@@ -205,7 +205,7 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-2"] as? String, "abc")
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-3"] as? Bool, true)
 
-        try Datadog.deinitializeOrThrow()
+        try Datadog.flushAndDeinitialize()
     }
 
     func testBuildTrackingConsentPending() {
