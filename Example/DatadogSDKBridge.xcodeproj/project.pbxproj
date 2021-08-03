@@ -126,6 +126,7 @@
 				607FACE21AFB9204008FA782 /* Frameworks */,
 				607FACE31AFB9204008FA782 /* Resources */,
 				08518C1117E4F5407F9F1116 /* [CP] Embed Pods Frameworks */,
+				619506D626B946460046CB05 /* ⚙️ Run Linter */,
 			);
 			buildRules = (
 			);
@@ -202,6 +203,25 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		619506D626B946460046CB05 /* ⚙️ Run Linter */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "⚙️ Run Linter";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n  cd ${SOURCE_ROOT}/..\n  ./tools/lint/run-linter.sh\n  ./tools/license/check-license.sh\nfi\n";
 			showEnvVarsInLog = 0;
 		};
 		92C93CC86C878F3F9DA12A1C /* [CP] Check Pods Manifest.lock */ = {
