@@ -9,20 +9,34 @@ To propose improvements, feel free to submit a PR or open an Issue.
 
 You need [CocoaPods](https://cocoapods.org) and Xcode (_preferably one of the last versions_).
 
-### Dependencies
+### Preparing The Repo
 
-`DatadogSDKBridge` depends on `DatadogSDK{Objc}` pod
+To prepare the repo for development after fresh clone, run `make` in the root folder:
+```bash
+$ make
+```
+This will install necessary tools and fetch required dependencies.
 
-### Running Example
+### Writting Code and Tests
 
-You need to run `pod install` in `Example` folder.
-Then you can run it from Xcode.
+After fetching new commit, you may need to run `pod install` in `Example` folder if dependencies were upgraded on remote.
 
-### Running the tests
+To work on the `DatadogSDKBridge` pod open `Example/DatadogSDKBridge.xcworkspace` in Xcode. This workspace includes two projects:
+```
+DatadogSDKBridge
+ - Podspec Metadata
+ - Tests
+ - ...
 
-**IMPORTANT**: You need to select `DatadogSDKBridge` scheme in Xcode in order to run tests, yet this scheme is hidden by default. You can show it from "Manage Schemes" menu in Xcode.
-
-Find `DatadogSDKBridge-Unit-Tests` in Test Navigator of Xcode and run them.
+Pods
+ - Development Pods
+   - DatadogSDKBridge
+ - Pods
+   - ...
+```
+* Write code in `Pods > Development Pods > DatadogSDKBridge`.
+* Write tests in `DatadogSDKBridge > Tests`.
+* Run tests with `⌘ + U`.
 
 ## Submitting Issues
 
@@ -107,4 +121,4 @@ Although it's written in Swift, it should be as close to ObjC as possible in ord
 
 ### Conventions
 
-Regarding coding style: `Example.xcworkspace` runs `swiftlint` as a `Build phase` step. Please make sure linter doesn't have warnings or errors before raising your PR.
+Regarding coding style: `DatadogSDKBridge.xcworkspace` runs `swiftlint` as a `Build phase` step. Please make sure linter doesn't have warnings or errors before raising your PR.

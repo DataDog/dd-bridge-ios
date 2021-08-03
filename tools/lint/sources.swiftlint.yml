@@ -91,4 +91,3 @@ custom_rules:
 
 included:
   - ../../DatadogSDKBridge
-  - ../../Example/DatadogSDKBridge

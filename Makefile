@@ -1,14 +1,9 @@
-all: tools dependencies xcodeproj-httpservermock templates
+all: tools dependencies
 .PHONY : tools
 
 tools:
 		@echo "⚙️  Installing tools..."
 		@brew list swiftlint &>/dev/null || brew install swiftlint
-		@echo "OK 👌"
-
-templates:
-		@echo "⚙️  Installing Xcode templates..."
-		./tools/xcode-templates/install-xcode-templates.sh
 		@echo "OK 👌"
 
 dependencies:

@@ -3,7 +3,3 @@
  * This product includes software developed at Datadog (https://www.datadoghq.com/).
  * Copyright 2019-2020 Datadog, Inc.
  */
-
-import UIKit
-
-internal class ViewController: UIViewController { }
