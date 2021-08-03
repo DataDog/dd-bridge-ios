@@ -28,6 +28,7 @@
 		619506CC26B93BD20046CB05 /* DdSdkTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DdSdkTests.swift; sourceTree = "<group>"; };
 		619506CD26B93BD20046CB05 /* AnyEncodableTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AnyEncodableTests.swift; sourceTree = "<group>"; };
 		619506D326B93CB40046CB05 /* DatadogSDKBridge.podspec.src */ = {isa = PBXFileReference; lastKnownFileType = text; name = DatadogSDKBridge.podspec.src; path = ../DatadogSDKBridge.podspec.src; sourceTree = "<group>"; };
+		619506D826B94DE90046CB05 /* DatadogSDK.debug.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = DatadogSDK.debug.xcconfig; sourceTree = "<group>"; };
 		83C2E1CFBCA5873907FC6524 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		900ACF2E2DC14EEFE52A6E36 /* Pods-DatadogSDKBridge_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Tests.release.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests.release.xcconfig"; sourceTree = "<group>"; };
 		F8332D35F5F99117CEFC7F28 /* Pods_DatadogSDKBridge_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DatadogSDKBridge_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -48,6 +49,7 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				619506D726B94DE90046CB05 /* xcconfigs */,
 				607FACF51AFB993E008FA782 /* Podspec Metadata */,
 				607FACE81AFB9204008FA782 /* Tests */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -95,6 +97,14 @@
 				83C2E1CFBCA5873907FC6524 /* LICENSE */,
 			);
 			name = "Podspec Metadata";
+			sourceTree = "<group>";
+		};
+		619506D726B94DE90046CB05 /* xcconfigs */ = {
+			isa = PBXGroup;
+			children = (
+				619506D826B94DE90046CB05 /* DatadogSDK.debug.xcconfig */,
+			);
+			path = xcconfigs;
 			sourceTree = "<group>";
 		};
 		6929D6E34295A34FD69829B7 /* Frameworks */ = {
