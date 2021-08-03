@@ -12,12 +12,9 @@ target 'DatadogSDKBridge_Tests' do
 end
 
 post_install do |installer|
-  pwd = Dir.pwd
-
-  # Customize build settings for `dd-sdk-ios` dependency:
-  dd_sdk_ios_xcconfig = "#{pwd}/Pods/Target Support Files/DatadogSDK/DatadogSDK.debug.xcconfig"
-  File.open(dd_sdk_ios_xcconfig, "a") do |file|
-    file.puts("\n// Override build settings for DatadogSDK:")
-    file.puts("#include \"../../../xcconfigs/DatadogSDK.debug.xcconfig\"")
+  # Enable `DD_SDK_COMPILED_FOR_TESTING` condition when compiling `DatadogSDK` dependency:
+  datadog_sdk_target = installer.pods_project.targets.detect {|t| t.name == "DatadogSDK" }
+  datadog_sdk_target.build_configurations.each do |config|
+    config.build_settings['SWIFT_ACTIVE_COMPILATION_CONDITIONS'] = '$(inherited) DD_SDK_COMPILED_FOR_TESTING'
   end
 end
