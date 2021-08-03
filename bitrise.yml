@@ -73,13 +73,11 @@ workflows:
     - xcode-test:
         title: Run unit tests for DatadogSDKBridge - iOS Simulator
         inputs:
-        # NOTE: RUMM-1355 DatadogSDKBridge-Unit-Tests scheme is hidden, open `Manage Schemes` window to see it if needed
-        - scheme: DatadogSDKBridge-Unit-Tests
+        - scheme: DatadogSDKBridge-Example
         - simulator_device: iPhone 12 mini
         - is_clean_build: 'yes'
-        # NOTE: RUMM-1355 generate_code_coverage_files with static linking results in undefined symbols errors
-        - generate_code_coverage_files: 'no'
-        - project_path: Example/Pods/Pods.xcodeproj
+        - generate_code_coverage_files: 'yes'
+        - project_path: Example/DatadogSDKBridge.xcworkspace
         - xcpretty_test_options: --color --report html --output "${BITRISE_DEPLOY_DIR}/DatadogSDKBridge-unit-tests.html"
 
   ship:

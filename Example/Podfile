@@ -1,15 +1,20 @@
 platform :ios, '11.0'
+use_frameworks!
 
-target 'DatadogSDKBridge_Example' do
-#  pod 'DatadogSDK', :path => '../../dd-sdk-ios/'
-#  pod 'DatadogSDKObjc', :path => '../../dd-sdk-ios/'
-  pod 'DatadogSDKBridge', :path => '../', :testspecs => ['Tests']
+target 'DatadogSDKBridge_Tests' do
+  # Uncomment the `pod DatadogSDK` below to build against the local version of `dd-sdk-ios` (requires `pod update`).
+  # This might be handy to work on the bridge without releasing a new version of `dd-sdk-ios`.
+  #
+  # Otherwise `pod update` will use `dd-sdk-ios` version specified as dependency in `DatadogSDKBridge.podspec`.
+  # pod 'DatadogSDK', :path => '../../dd-sdk-ios/'
+
+  pod 'DatadogSDKBridge', :path => '../'
 end
 
 post_install do |installer|
   pwd = Dir.pwd
 
-  # Customize build settings for DatadogSDK (dd-sdk-ios) dependency:
+  # Customize build settings for `dd-sdk-ios` dependency:
   dd_sdk_ios_xcconfig = "#{pwd}/Pods/Target Support Files/DatadogSDK/DatadogSDK.debug.xcconfig"
   File.open(dd_sdk_ios_xcconfig, "a") do |file|
     file.puts("\n// Override build settings for DatadogSDK:")

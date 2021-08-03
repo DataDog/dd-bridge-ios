@@ -4,6 +4,10 @@
  * Copyright 2019-2020 Datadog, Inc.
  */
 
-import UIKit
+import XCTest
 
-internal class ViewController: UIViewController { }
+class FooTests: XCTestCase {
+    func testItDoesSomething() {
+        // 🐶
+    }
+}
