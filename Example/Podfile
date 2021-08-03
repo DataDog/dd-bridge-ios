@@ -5,3 +5,14 @@ target 'DatadogSDKBridge_Example' do
 #  pod 'DatadogSDKObjc', :path => '../../dd-sdk-ios/'
   pod 'DatadogSDKBridge', :path => '../', :testspecs => ['Tests']
 end
+
+post_install do |installer|
+  pwd = Dir.pwd
+
+  # Customize build settings for DatadogSDK (dd-sdk-ios) dependency:
+  dd_sdk_ios_xcconfig = "#{pwd}/Pods/Target Support Files/DatadogSDK/DatadogSDK.debug.xcconfig"
+  File.open(dd_sdk_ios_xcconfig, "a") do |file|
+    file.puts("\n// Override build settings for DatadogSDK:")
+    file.puts("#include \"../../../xcconfigs/DatadogSDK.debug.xcconfig\"")
+  end
+end

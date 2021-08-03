@@ -11,7 +11,7 @@ import XCTest
 internal class DdSdkTests: XCTestCase {
     private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
 
-    func testSDKInitialization() throws {
+    func testSDKInitialization() {
         let originalConsolePrint = consolePrint
         defer { consolePrint = originalConsolePrint }
 
@@ -26,7 +26,7 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.🔥 Datadog SDK usage error: The `RUMMonitor` instance was already created. Use existing `Global.rum` instead of initializing the `RUMMonitor` another time.")
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
     func testBuildConfigurationNoUIKitByDefault() {
@@ -53,64 +53,64 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertNotNil(ddConfig.rumUIKitViewsPredicate)
     }
 
-    func testSDKInitializationWithVerbosityDebug() throws {
+    func testSDKInitializationWithVerbosityDebug() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "debug"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.debug)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSDKInitializationWithVerbosityInfo() throws {
+    func testSDKInitializationWithVerbosityInfo() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "info"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.info)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSDKInitializationWithVerbosityWarn() throws {
+    func testSDKInitializationWithVerbosityWarn() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "warn"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.warn)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSDKInitializationWithVerbosityError() throws {
+    func testSDKInitializationWithVerbosityError() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "error"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertEqual(Datadog.verbosityLevel, LogLevel.error)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSDKInitializationWithVerbosityNil() throws {
+    func testSDKInitializationWithVerbosityNil() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertNil(Datadog.verbosityLevel)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSDKInitializationWithVerbosityUnknown() throws {
+    func testSDKInitializationWithVerbosityUnknown() {
         let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "foo"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
         XCTAssertNil(Datadog.verbosityLevel)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
     func testBuildConfigurationDefaultEndpoint() {
@@ -181,10 +181,10 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-2"] as? String, "abc")
         XCTAssertEqual(receivedUserInfo.extraInfo["extra-info-3"] as? Bool, true)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
-    func testSettingAttributes() throws {
+    func testSettingAttributes() {
         let bridge = DdSdkImplementation()
         bridge.initialize(configuration: validConfiguration)
 
@@ -205,7 +205,7 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-2"] as? String, "abc")
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-3"] as? Bool, true)
 
-        try Datadog.flushAndDeinitialize()
+        Datadog.flushAndDeinitialize()
     }
 
     func testBuildTrackingConsentPending() {

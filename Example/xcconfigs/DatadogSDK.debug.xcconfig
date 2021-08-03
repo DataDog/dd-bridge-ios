@@ -1,0 +1,9 @@
+// This file defines additional build options for compiling `dd-sdk-ios` in DEBUG configuration.
+//
+// It is only used for local development, namely when running unit tests for `DatadogSDKBridge.xcworkspace`.
+// It has no impact on the produced `DatadogSDKBridge` pod.
+//
+// This file is referenced from pod-generated `Datadog.debug.xcconfig` produced on `pod install`. The link
+// is established in `post_install` hook in the `Podfile`.
+
+SWIFT_ACTIVE_COMPILATION_CONDITIONS = $(inherited) DD_SDK_COMPILED_FOR_TESTING
