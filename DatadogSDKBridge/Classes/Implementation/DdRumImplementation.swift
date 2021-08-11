@@ -41,12 +41,13 @@ private extension RUMUserActionType {
     }
 }
 
-private extension RUMErrorSource {
+internal extension RUMErrorSource {
     init(from string: String) {
         switch string.lowercased() {
         case "source": self = .source
         case "network": self = .network
         case "webview": self = .webview
+        case "console": self = .console
         default: self = .custom
         }
     }
