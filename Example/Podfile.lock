@@ -1,8 +1,8 @@
 PODS:
-  - DatadogSDK (1.7.0-beta2):
+  - DatadogSDK (1.7.0-beta3):
     - Kronos (~> 4.2)
-  - DatadogSDKBridge (0.4.5):
-    - DatadogSDK (~> 1.7.0-beta2)
+  - DatadogSDKBridge (0.4.6):
+    - DatadogSDK (~> 1.7.0-beta3)
   - Kronos (4.2.1)
 
 DEPENDENCIES:
@@ -18,8 +18,8 @@ EXTERNAL SOURCES:
     :path: "../"
 
 SPEC CHECKSUMS:
-  DatadogSDK: e8fcb05c1302e3eead6c3ea5e08a1dc7f167cc64
-  DatadogSDKBridge: b51f0d33db7530cf281a6e9f800b61eb2b738a11
+  DatadogSDK: 82aa63377d806379ad6b149e3a62b2e54e759ca3
+  DatadogSDKBridge: 15cf2a86b854c53026584a8c2ce5e350e237358f
   Kronos: 0ca73a1c00dc9a49a0bab4a6ed42f282562a7058
 
 PODFILE CHECKSUM: 0f230940dcc6685e1c6b3c7b34b7b2c618993c36

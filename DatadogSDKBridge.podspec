@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DatadogSDKBridge'
-  s.version          = '0.4.5'
+  s.version          = '0.4.6'
   s.summary          = 'Datadog iOS SDK Bridge for cross-platform integrations.'
 
   s.homepage         = 'https://github.com/DataDog/dd-bridge-ios'
@@ -17,5 +17,5 @@ Pod::Spec.new do |s|
   s.swift_versions        = ['5.1']
   s.ios.deployment_target = '11.0'
   s.source_files = 'DatadogSDKBridge/Classes/**/*'
-  s.dependency 'DatadogSDK', '~> 1.7.0-beta2'
+  s.dependency 'DatadogSDK', '~> 1.7.0-beta3'
 end
