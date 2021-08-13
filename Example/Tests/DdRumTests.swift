@@ -233,6 +233,14 @@ internal class DdRumTests: XCTestCase {
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 0)
     }
 
+    func testRumErrorSourceMapping() throws {
+        XCTAssertEqual(RUMErrorSource(from: "source"), RUMErrorSource.source)
+        XCTAssertEqual(RUMErrorSource(from: "network"), RUMErrorSource.network)
+        XCTAssertEqual(RUMErrorSource(from: "webview"), RUMErrorSource.webview)
+        XCTAssertEqual(RUMErrorSource(from: "console"), RUMErrorSource.console)
+        XCTAssertEqual(RUMErrorSource(from: "foobar"), RUMErrorSource.custom)
+    }
+
     private func nanoTimeToDate(timestampNs: Int64) -> Date {
         return Date(timeIntervalSince1970: TimeInterval(fromNs: timestampNs))
     }
