@@ -74,6 +74,10 @@ internal class DdSdkImplementation: DdSdk {
             _ = ddConfigBuilder.trackUIKitRUMViews()
         }
 
+        if let serviceName = additionalConfig["_dd.service_name"] as? String {
+            _ = ddConfigBuilder.set(serviceName: serviceName)
+        }
+
         return ddConfigBuilder.build()
     }
 

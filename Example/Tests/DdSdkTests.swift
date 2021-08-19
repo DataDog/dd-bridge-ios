@@ -156,6 +156,22 @@ internal class DdSdkTests: XCTestCase {
         // swiftlint:enable force_cast
     }
 
+    func testBuildConfigurationWithNilServiceNameByDefault() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNil(ddConfig.serviceName)
+    }
+
+    func testBuildConfigurationWithServiceName() {
+        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.service_name": "com.example.app"])
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.serviceName, "com.example.app")
+    }
+
     func testSettingUserInfo() throws {
         let bridge = DdSdkImplementation()
         bridge.initialize(configuration: validConfiguration)
