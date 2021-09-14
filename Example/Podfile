@@ -9,6 +9,7 @@ target 'DatadogSDKBridge_Tests' do
   # pod 'DatadogSDK', :path => '../../dd-sdk-ios/'
 
   pod 'DatadogSDKBridge', :path => '../'
+  pod 'DatadogSDK', :git => 'https://github.com/DataDog/dd-sdk-ios', :branch => 'master'
 end
 
 post_install do |installer|

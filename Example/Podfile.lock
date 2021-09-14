@@ -1,27 +1,35 @@
 PODS:
-  - DatadogSDK (1.7.0-beta3):
+  - DatadogSDK (1.7.0-beta4):
     - Kronos (~> 4.2)
   - DatadogSDKBridge (0.4.6):
     - DatadogSDK (~> 1.7.0-beta3)
   - Kronos (4.2.1)
 
 DEPENDENCIES:
+  - DatadogSDK (from `https://github.com/DataDog/dd-sdk-ios`, branch `master`)
   - DatadogSDKBridge (from `../`)
 
 SPEC REPOS:
   trunk:
-    - DatadogSDK
     - Kronos
 
 EXTERNAL SOURCES:
+  DatadogSDK:
+    :branch: master
+    :git: https://github.com/DataDog/dd-sdk-ios
   DatadogSDKBridge:
     :path: "../"
 
+CHECKOUT OPTIONS:
+  DatadogSDK:
+    :commit: 4643224f4d2c685651e0abd9db1b74569a6855a6
+    :git: https://github.com/DataDog/dd-sdk-ios
+
 SPEC CHECKSUMS:
-  DatadogSDK: 82aa63377d806379ad6b149e3a62b2e54e759ca3
+  DatadogSDK: e7a7585b9976d7be7376b36898f6f3c6181f89ee
   DatadogSDKBridge: 15cf2a86b854c53026584a8c2ce5e350e237358f
   Kronos: 0ca73a1c00dc9a49a0bab4a6ed42f282562a7058
 
-PODFILE CHECKSUM: 0f230940dcc6685e1c6b3c7b34b7b2c618993c36
+PODFILE CHECKSUM: 621cd648e4137eb14ca5d1a8ff680342fa093dc8
 
-COCOAPODS: 1.10.2
+COCOAPODS: 1.10.1

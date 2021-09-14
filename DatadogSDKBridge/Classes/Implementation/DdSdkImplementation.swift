@@ -67,19 +67,58 @@ internal class DdSdkImplementation: DdSdk {
             _ = ddConfigBuilder.set(endpoint: .us)
         }
 
-        let additionalConfig: [String: Any] = configuration.additionalConfig as? [String: Any] ?? [:]
-        _ = ddConfigBuilder.set(additionalConfiguration: additionalConfig)
+        let additionalConfig = configuration.additionalConfig
 
-        let enableViewTracking = additionalConfig["_dd.native_view_tracking"] as? Bool
-        if enableViewTracking == true {
+        if let additionalConfiguration = additionalConfig as? [String: Any] {
+            _ = ddConfigBuilder.set(additionalConfiguration: additionalConfiguration)
+        }
+
+        if let enableViewTracking = additionalConfig?["_dd.native_view_tracking"] as? Bool, enableViewTracking {
             _ = ddConfigBuilder.trackUIKitRUMViews()
         }
 
-        if let serviceName = additionalConfig["_dd.service_name"] as? String {
+        if let serviceName = additionalConfig?["_dd.service_name"] as? String {
             _ = ddConfigBuilder.set(serviceName: serviceName)
         }
 
+        if let proxyConfiguration = buildProxyConfiguration(config: additionalConfig) {
+            _ = ddConfigBuilder.set(proxyConfiguration: proxyConfiguration)
+        }
+
         return ddConfigBuilder.build()
+    }
+
+    func buildProxyConfiguration(config: NSDictionary?) -> [AnyHashable: Any]? {
+        guard let address = config?["_dd.proxy.address"] as? String else {
+            return nil
+        }
+
+        var proxy: [AnyHashable: Any] = [kCFNetworkProxiesHTTPEnable: true]
+        proxy[kCFNetworkProxiesHTTPProxy] = address
+        proxy[kCFNetworkProxiesHTTPPort] = config?["_dd.proxy.port"]
+        proxy[kCFProxyUsernameKey] = config?["_dd.proxy.username"]
+        proxy[kCFProxyPasswordKey] = config?["_dd.proxy.password"]
+
+        if let port = config?["_dd.proxy.port"] as? Int {
+            proxy[kCFNetworkProxiesHTTPPort] = port
+        } else if let string = config?["_dd.proxy.port"] as? String, let port = Int(string) {
+            proxy[kCFNetworkProxiesHTTPPort] = port
+        }
+
+        let type = config?["_dd.proxy.type"] as? String
+
+        switch type {
+        case "none":
+            proxy[kCFProxyTypeKey] = kCFProxyTypeNone
+        case "https":
+            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTPS
+        case "socks":
+            proxy[kCFProxyTypeKey] = kCFProxyTypeSOCKS
+        default:
+            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTP
+        }
+
+        return proxy
     }
 
     func buildTrackingConsent(consent: NSString?) -> TrackingConsent {

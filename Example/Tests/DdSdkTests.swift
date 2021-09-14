@@ -256,6 +256,66 @@ internal class DdSdkTests: XCTestCase {
 
         XCTAssertEqual(trackingConsent, TrackingConsent.pending)
     }
+
+    func testBuildProxyConfiguration() {
+        let configuration: NSMutableDictionary = [
+            "_dd.proxy.address": "host",
+            "_dd.proxy.username": "username",
+            "_dd.proxy.password": "pwd"
+        ]
+
+        var proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPProxy] as? String, "host")
+        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
+        XCTAssertEqual(proxy?[kCFProxyUsernameKey] as? String, "username")
+        XCTAssertEqual(proxy?[kCFProxyPasswordKey] as? String, "pwd")
+
+        configuration.setValue("none", forKey: "_dd.proxy.type")
+        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeNone as String)
+
+        configuration.setValue("https", forKey: "_dd.proxy.type")
+        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTPS as String)
+
+        configuration.setValue("socks", forKey: "_dd.proxy.type")
+        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeSOCKS as String)
+
+        configuration.setValue(99, forKey: "_dd.proxy.port")
+        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
+
+        configuration.setValue("99", forKey: "_dd.proxy.port")
+        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
+        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
+    }
+
+    func testProxyConfiguration() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: nil,
+            trackingConsent: "pending",
+            additionalConfig: [
+                "_dd.proxy.address": "host",
+                "_dd.proxy.port": 99,
+                "_dd.proxy.username": "username",
+                "_dd.proxy.password": "pwd"
+            ]
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFNetworkProxiesHTTPProxy] as? String, "host")
+        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
+        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
+        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyUsernameKey] as? String, "username")
+        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyPasswordKey] as? String, "pwd")
+    }
 }
 
 private class MockRUMMonitor: DDRUMMonitor {
