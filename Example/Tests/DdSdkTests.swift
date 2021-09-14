@@ -266,13 +266,13 @@ internal class DdSdkTests: XCTestCase {
 
         var proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
         XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPProxy] as? String, "host")
-        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
+        XCTAssertNil(proxy?[kCFProxyTypeKey])
         XCTAssertEqual(proxy?[kCFProxyUsernameKey] as? String, "username")
         XCTAssertEqual(proxy?[kCFProxyPasswordKey] as? String, "pwd")
 
-        configuration.setValue("none", forKey: "_dd.proxy.type")
+        configuration.setValue("http", forKey: "_dd.proxy.type")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeNone as String)
+        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
 
         configuration.setValue("https", forKey: "_dd.proxy.type")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
@@ -303,6 +303,7 @@ internal class DdSdkTests: XCTestCase {
             additionalConfig: [
                 "_dd.proxy.address": "host",
                 "_dd.proxy.port": 99,
+                "_dd.proxy.type": "http",
                 "_dd.proxy.username": "username",
                 "_dd.proxy.password": "pwd"
             ]

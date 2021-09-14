@@ -108,14 +108,14 @@ internal class DdSdkImplementation: DdSdk {
         let type = config?["_dd.proxy.type"] as? String
 
         switch type {
-        case "none":
-            proxy[kCFProxyTypeKey] = kCFProxyTypeNone
+        case "http":
+            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTP
         case "https":
             proxy[kCFProxyTypeKey] = kCFProxyTypeHTTPS
         case "socks":
             proxy[kCFProxyTypeKey] = kCFProxyTypeSOCKS
         default:
-            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTP
+            break
         }
 
         return proxy
