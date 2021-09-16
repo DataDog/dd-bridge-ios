@@ -260,35 +260,43 @@ internal class DdSdkTests: XCTestCase {
     func testBuildProxyConfiguration() {
         let configuration: NSMutableDictionary = [
             "_dd.proxy.address": "host",
+            "_dd.proxy.port": 99,
             "_dd.proxy.username": "username",
             "_dd.proxy.password": "pwd"
         ]
 
         var proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPProxy] as? String, "host")
-        XCTAssertNil(proxy?[kCFProxyTypeKey])
+
         XCTAssertEqual(proxy?[kCFProxyUsernameKey] as? String, "username")
         XCTAssertEqual(proxy?[kCFProxyPasswordKey] as? String, "pwd")
 
         configuration.setValue("http", forKey: "_dd.proxy.type")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
+        XCTAssertEqual(proxy?["HTTPEnable"] as? Int, 1)
+        XCTAssertEqual(proxy?["HTTPProxy"] as? String, "host")
+        XCTAssertEqual(proxy?["HTTPPort"] as? Int, 99)
+        XCTAssertEqual(proxy?["HTTPSEnable"] as? Int, 1)
+        XCTAssertEqual(proxy?["HTTPSProxy"] as? String, "host")
+        XCTAssertEqual(proxy?["HTTPSPort"] as? Int, 99)
 
         configuration.setValue("https", forKey: "_dd.proxy.type")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTPS as String)
+        XCTAssertEqual(proxy?["HTTPEnable"] as? Int, 1)
+        XCTAssertEqual(proxy?["HTTPProxy"] as? String, "host")
+        XCTAssertEqual(proxy?["HTTPPort"] as? Int, 99)
+        XCTAssertEqual(proxy?["HTTPSEnable"] as? Int, 1)
+        XCTAssertEqual(proxy?["HTTPSProxy"] as? String, "host")
+        XCTAssertEqual(proxy?["HTTPSPort"] as? Int, 99)
 
         configuration.setValue("socks", forKey: "_dd.proxy.type")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFProxyTypeKey] as? String, kCFProxyTypeSOCKS as String)
-
-        configuration.setValue(99, forKey: "_dd.proxy.port")
-        proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
+        XCTAssertEqual(proxy?["SOCKSEnable"] as? Int, 1)
+        XCTAssertEqual(proxy?["SOCKSProxy"] as? String, "host")
+        XCTAssertEqual(proxy?["SOCKSPort"] as? Int, 99)
 
         configuration.setValue("99", forKey: "_dd.proxy.port")
         proxy = DdSdkImplementation().buildProxyConfiguration(config: configuration)
-        XCTAssertEqual(proxy?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
+        XCTAssertEqual(proxy?["SOCKSPort"] as? NSNumber, 99)
     }
 
     func testProxyConfiguration() {
@@ -311,9 +319,8 @@ internal class DdSdkTests: XCTestCase {
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
-        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFNetworkProxiesHTTPProxy] as? String, "host")
-        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFNetworkProxiesHTTPPort] as? NSNumber, 99)
-        XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyTypeKey] as? String, kCFProxyTypeHTTP as String)
+        XCTAssertEqual(ddConfig.proxyConfiguration?["HTTPProxy"] as? String, "host")
+        XCTAssertEqual(ddConfig.proxyConfiguration?["HTTPPort"] as? NSNumber, 99)
         XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyUsernameKey] as? String, "username")
         XCTAssertEqual(ddConfig.proxyConfiguration?[kCFProxyPasswordKey] as? String, "pwd")
     }

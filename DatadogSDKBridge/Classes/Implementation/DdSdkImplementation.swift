@@ -93,27 +93,34 @@ internal class DdSdkImplementation: DdSdk {
             return nil
         }
 
-        var proxy: [AnyHashable: Any] = [kCFNetworkProxiesHTTPEnable: true]
-        proxy[kCFNetworkProxiesHTTPProxy] = address
-        proxy[kCFNetworkProxiesHTTPPort] = config?["_dd.proxy.port"]
+        var proxy: [AnyHashable: Any] = [:]
         proxy[kCFProxyUsernameKey] = config?["_dd.proxy.username"]
         proxy[kCFProxyPasswordKey] = config?["_dd.proxy.password"]
 
-        if let port = config?["_dd.proxy.port"] as? Int {
-            proxy[kCFNetworkProxiesHTTPPort] = port
-        } else if let string = config?["_dd.proxy.port"] as? String, let port = Int(string) {
-            proxy[kCFNetworkProxiesHTTPPort] = port
+        let type = config?["_dd.proxy.type"] as? String
+        var port = config?["_dd.proxy.port"] as? Int
+        if let string = config?["_dd.proxy.port"] as? String {
+            port = Int(string)
         }
 
-        let type = config?["_dd.proxy.type"] as? String
-
         switch type {
-        case "http":
-            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTP
-        case "https":
-            proxy[kCFProxyTypeKey] = kCFProxyTypeHTTPS
+        case "http", "https":
+            // CFNetwork support HTTP and tunneling HTTPS proxies.
+            // As intakes will most likely be https, we enable both channels.
+            //
+            // We use constants string keys because there is an issue with
+            // cross-platform availability for proxy configuration symbols.
+            // see. https://developer.apple.com/forums/thread/19356?answerId=131709022#131709022
+            proxy["HTTPEnable"] = 1
+            proxy["HTTPProxy"] = address
+            proxy["HTTPPort"] = port
+            proxy["HTTPSEnable"] = 1
+            proxy["HTTPSProxy"] = address
+            proxy["HTTPSPort"] = port
         case "socks":
-            proxy[kCFProxyTypeKey] = kCFProxyTypeSOCKS
+            proxy["SOCKSEnable"] = 1
+            proxy["SOCKSProxy"] = address
+            proxy["SOCKSPort"] = port
         default:
             break
         }
