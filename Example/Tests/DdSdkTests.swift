@@ -114,35 +114,156 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationDefaultEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: nil,
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
-        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us1)
     }
 
     func testBuildConfigurationUSEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "US", trackingConsent: "pending", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "US",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
-        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.us)
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us1)
     }
 
-    func testBuildConfigurationEUEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "EU", trackingConsent: "pending", additionalConfig: nil)
+    func testBuildConfigurationUS1Endpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "US1",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
-        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.eu)
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us1)
+    }
+
+    func testBuildConfigurationUS3Endpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "US3",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us3)
+    }
+
+    func testBuildConfigurationUS5Endpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "US5",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us5)
+    }
+
+    func testBuildConfigurationUS1FEDEndpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "US1_FED",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us1_fed)
     }
 
     func testBuildConfigurationGOVEndpoint() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: "GOV", trackingConsent: "pending", additionalConfig: nil)
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "GOV",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
-        XCTAssertEqual(ddConfig.datadogEndpoint, Datadog.Configuration.DatadogEndpoint.gov)
+        XCTAssertEqual(ddConfig.datadogEndpoint, .us1_fed)
+    }
+
+    func testBuildConfigurationEUEndpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "EU",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.datadogEndpoint, .eu1)
+    }
+
+    func testBuildConfigurationEU1Endpoint() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: "EU1",
+            trackingConsent: "pending",
+            additionalConfig: nil
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.datadogEndpoint, .eu1)
     }
 
     func testBuildConfigurationAdditionalConfig() {
