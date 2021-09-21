@@ -22,6 +22,7 @@ internal class DdSdkImplementation: DdSdk {
         let castedAttributes = castAttributesToSwift(attributes)
         for (key, value) in castedAttributes {
             Global.rum.addAttribute(forKey: key, value: value)
+            GlobalState.addAttribute(forKey: key, value: value)
         }
     }
 

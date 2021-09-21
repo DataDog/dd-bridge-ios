@@ -221,6 +221,11 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-2"] as? String, "abc")
         XCTAssertEqual(rumMonitorMock.receivedAttributes["attribute-3"] as? Bool, true)
 
+        XCTAssertEqual(GlobalState.globalAttributes["attribute-1"] as? Int64, 123)
+        XCTAssertEqual(GlobalState.globalAttributes["attribute-2"] as? String, "abc")
+        XCTAssertEqual(GlobalState.globalAttributes["attribute-3"] as? Bool, true)
+
+        GlobalState.globalAttributes.removeAll()
         Datadog.flushAndDeinitialize()
     }
 

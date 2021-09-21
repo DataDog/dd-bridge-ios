@@ -15,6 +15,13 @@ internal class DdTraceTests: XCTestCase {
     override func setUpWithError() throws {
         try super.setUpWithError()
         tracer = DdTraceImpementation { self.mockNativeTracer }
+        GlobalState.addAttribute(forKey: "global-string", value: "foo")
+        GlobalState.addAttribute(forKey: "global-int", value: 42)
+    }
+
+    override func tearDown() {
+        GlobalState.globalAttributes.removeAll()
+        super.tearDown()
     }
 
     private let testTags = NSDictionary(
@@ -60,6 +67,8 @@ internal class DdTraceTests: XCTestCase {
         XCTAssertEqual(tags["key_string"] as? String, "value")
         XCTAssertEqual(tags["key_number"] as? Int64, 123)
         XCTAssertEqual(tags["key_bool"] as? Bool, true)
+        XCTAssertEqual(tags["global-string"] as? String, "foo")
+        XCTAssertEqual(tags["global-int"] as? Int, 42)
     }
 
     func testFinishingASpan() throws {
@@ -89,6 +98,8 @@ internal class DdTraceTests: XCTestCase {
         )
         let tags = try XCTUnwrap(startedSpan.tags)
         XCTAssertEqual(tags["last_key"] as? String, "last_value")
+        XCTAssertEqual(tags["global-string"] as? String, "foo")
+        XCTAssertEqual(tags["global-int"] as? Int, 42)
     }
 
     func testFinishingInexistentSpan() {

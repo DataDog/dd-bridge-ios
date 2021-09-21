@@ -13,6 +13,7 @@
 		619506D026B93BD20046CB05 /* DdTraceTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619506CB26B93BD20046CB05 /* DdTraceTests.swift */; };
 		619506D126B93BD20046CB05 /* DdSdkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619506CC26B93BD20046CB05 /* DdSdkTests.swift */; };
 		619506D226B93BD20046CB05 /* AnyEncodableTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 619506CD26B93BD20046CB05 /* AnyEncodableTests.swift */; };
+		F68607F126FA06AD00A8F0B4 /* GlobalStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F68607F026FA06AD00A8F0B4 /* GlobalStateTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,6 +31,7 @@
 		619506D326B93CB40046CB05 /* DatadogSDKBridge.podspec.src */ = {isa = PBXFileReference; lastKnownFileType = text; name = DatadogSDKBridge.podspec.src; path = ../DatadogSDKBridge.podspec.src; sourceTree = "<group>"; };
 		83C2E1CFBCA5873907FC6524 /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
 		900ACF2E2DC14EEFE52A6E36 /* Pods-DatadogSDKBridge_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-DatadogSDKBridge_Tests.release.xcconfig"; path = "Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests.release.xcconfig"; sourceTree = "<group>"; };
+		F68607F026FA06AD00A8F0B4 /* GlobalStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalStateTests.swift; sourceTree = "<group>"; };
 		F8332D35F5F99117CEFC7F28 /* Pods_DatadogSDKBridge_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_DatadogSDKBridge_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				619506CC26B93BD20046CB05 /* DdSdkTests.swift */,
 				619506CB26B93BD20046CB05 /* DdTraceTests.swift */,
 				607FACE91AFB9204008FA782 /* Supporting Files */,
+				F68607F026FA06AD00A8F0B4 /* GlobalStateTests.swift */,
 			);
 			path = Tests;
 			sourceTree = "<group>";
@@ -257,6 +260,7 @@
 				619506CF26B93BD20046CB05 /* DdLogsTests.swift in Sources */,
 				619506CE26B93BD20046CB05 /* DdRumTests.swift in Sources */,
 				619506D026B93BD20046CB05 /* DdTraceTests.swift in Sources */,
+				F68607F126FA06AD00A8F0B4 /* GlobalStateTests.swift in Sources */,
 				619506D226B93BD20046CB05 /* AnyEncodableTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
