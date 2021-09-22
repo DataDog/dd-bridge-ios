@@ -21,6 +21,17 @@ internal class DdLogsTests: XCTestCase {
         dictionary: ["key1": "value", 123: "value2"]
     )
 
+    override func setUp() {
+        super.setUp()
+        GlobalState.addAttribute(forKey: "global-string", value: "foo")
+        GlobalState.addAttribute(forKey: "global-int", value: 42)
+    }
+
+    override func tearDown() {
+        GlobalState.globalAttributes.removeAll()
+        super.tearDown()
+    }
+
     func testItInitializesNativeLoggerOnlyOnce() {
         // Given
         let expectation = self.expectation(description: "Initialize logger once")
@@ -44,7 +55,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .debug)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            validTestAttributes_swift.mergeWithGlobalAttributes().keys
+        )
     }
 
     func testLoggerInfo_validAttributes() throws {
@@ -54,7 +68,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .info)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            validTestAttributes_swift.mergeWithGlobalAttributes().keys
+        )
     }
 
     func testLoggerWarn_validAttributes() throws {
@@ -64,7 +81,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .warn)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            validTestAttributes_swift.mergeWithGlobalAttributes().keys
+        )
     }
 
     func testLoggerError_validAttributes() throws {
@@ -74,7 +94,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .error)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, validTestAttributes_swift.keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            validTestAttributes_swift.mergeWithGlobalAttributes().keys
+        )
     }
 
     func testLoggerDebug_invalidAttributes() throws {
@@ -84,7 +107,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .debug)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, [:].keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            GlobalState.globalAttributes.keys
+        )
     }
 
     func testLoggerInfo_invalidAttributes() throws {
@@ -94,7 +120,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .info)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, [:].keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            GlobalState.globalAttributes.keys
+        )
     }
 
     func testLoggerWarn_invalidAttributes() throws {
@@ -104,7 +133,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .warn)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, [:].keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            GlobalState.globalAttributes.keys
+        )
     }
 
     func testLoggerError_invalidAttributes() throws {
@@ -114,7 +146,10 @@ internal class DdLogsTests: XCTestCase {
         let received = try XCTUnwrap(mockNativeLogger.receivedMethodCalls.first)
         XCTAssertEqual(received.kind, .error)
         XCTAssertEqual(received.message, testMessage_swift)
-        XCTAssertEqual(received.attributes?.keys, [:].keys)
+        XCTAssertEqual(
+            received.attributes?.keys,
+            GlobalState.globalAttributes.keys
+        )
     }
 }
 

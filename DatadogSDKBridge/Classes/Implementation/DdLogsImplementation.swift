@@ -31,18 +31,22 @@ public class DdLogsImplementation: DdLogs {
     }
 
     public func debug(message: NSString, context: NSDictionary) {
-        logger.debug(message as String, error: nil, attributes: castAttributesToSwift(context))
+        let attributes = castAttributesToSwift(context).mergeWithGlobalAttributes()
+        logger.debug(message as String, error: nil, attributes: attributes)
     }
 
     public func info(message: NSString, context: NSDictionary) {
-        logger.info(message as String, error: nil, attributes: castAttributesToSwift(context))
+        let attributes = castAttributesToSwift(context).mergeWithGlobalAttributes()
+        logger.info(message as String, error: nil, attributes: attributes)
     }
 
     public func warn(message: NSString, context: NSDictionary) {
-        logger.warn(message as String, error: nil, attributes: castAttributesToSwift(context))
+        let attributes = castAttributesToSwift(context).mergeWithGlobalAttributes()
+        logger.warn(message as String, error: nil, attributes: attributes)
     }
 
     public func error(message: NSString, context: NSDictionary) {
-        logger.error(message as String, error: nil, attributes: castAttributesToSwift(context))
+        let attributes = castAttributesToSwift(context).mergeWithGlobalAttributes()
+        logger.error(message as String, error: nil, attributes: attributes)
     }
 }

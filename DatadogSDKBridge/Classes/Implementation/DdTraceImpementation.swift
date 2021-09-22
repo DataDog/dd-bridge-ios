@@ -29,7 +29,7 @@ internal class DdTraceImpementation: DdTrace {
         spanDictionary[id] = tracer.startSpan(
             operationName: operation as String,
             childOf: nil,
-            tags: castAttributesToSwift(context),
+            tags: castAttributesToSwift(context).mergeWithGlobalAttributes(),
             startTime: startDate
         )
         objc_sync_exit(self)
@@ -43,15 +43,14 @@ internal class DdTraceImpementation: DdTrace {
         objc_sync_exit(self)
 
         if let span = optionalSpan {
-            set(tags: context, to: span)
+            set(tags: castAttributesToSwift(context).mergeWithGlobalAttributes(), to: span)
             let timeIntervalSince1970: TimeInterval = Double(timestampMs) / 1_000
             span.finish(at: Date(timeIntervalSince1970: timeIntervalSince1970))
         }
     }
 
-    private func set(tags: NSDictionary, to span: OTSpan) {
-        let castedTags = castAttributesToSwift(tags)
-        for (key, value) in castedTags {
+    private func set(tags: [String: Encodable], to span: OTSpan) {
+        for (key, value) in tags {
             span.setTag(key: key, value: value)
         }
     }
