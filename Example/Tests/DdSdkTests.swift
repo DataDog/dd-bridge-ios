@@ -257,6 +257,23 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(trackingConsent, TrackingConsent.pending)
     }
 
+    func testBuildLongTaskThreshold() {
+        let configuration = DdSdkConfiguration(
+            clientToken: "client-token",
+            env: "env",
+            applicationId: "app-id",
+            nativeCrashReportEnabled: true,
+            sampleRate: 75.0,
+            site: nil,
+            trackingConsent: "pending",
+            additionalConfig: ["_dd.long_task.threshold": 2_500]
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.rumLongTaskDurationThreshold, 2.5)
+    }
+
     func testBuildProxyConfiguration() {
         let configuration: NSMutableDictionary = [
             "_dd.proxy.address": "host",
