@@ -14,7 +14,7 @@ import Foundation
      - applicationId: The RUM application ID.
      - nativeCrashReportEnabled: Whether the SDK should track native (pure iOS or pure Android) crashes (default is false).
      - sampleRate: The sample rate (between 0 and 100) of RUM sessions kept.
-     - site: The Datadog site of your organization (can be 'US', 'EU' or 'GOV', default is 'US').
+     - site: The Datadog site of your organization (can be 'US1', 'US1_FED', 'US3', 'US5', or 'EU1', default is 'US1').
      - trackingConsent: Consent, which can take one of the following values: 'pending', 'granted', 'not_granted'.
      - additionalConfig: Additional configuration parameters.
  */
