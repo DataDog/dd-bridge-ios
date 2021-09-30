@@ -67,19 +67,65 @@ internal class DdSdkImplementation: DdSdk {
             _ = ddConfigBuilder.set(endpoint: .us)
         }
 
-        let additionalConfig: [String: Any] = configuration.additionalConfig as? [String: Any] ?? [:]
-        _ = ddConfigBuilder.set(additionalConfiguration: additionalConfig)
+        let additionalConfig = configuration.additionalConfig
 
-        let enableViewTracking = additionalConfig["_dd.native_view_tracking"] as? Bool
-        if enableViewTracking == true {
+        if let additionalConfiguration = additionalConfig as? [String: Any] {
+            _ = ddConfigBuilder.set(additionalConfiguration: additionalConfiguration)
+        }
+
+        if let enableViewTracking = additionalConfig?["_dd.native_view_tracking"] as? Bool, enableViewTracking {
             _ = ddConfigBuilder.trackUIKitRUMViews()
         }
 
-        if let serviceName = additionalConfig["_dd.service_name"] as? String {
+        if let serviceName = additionalConfig?["_dd.service_name"] as? String {
             _ = ddConfigBuilder.set(serviceName: serviceName)
         }
 
+        if let proxyConfiguration = buildProxyConfiguration(config: additionalConfig) {
+            _ = ddConfigBuilder.set(proxyConfiguration: proxyConfiguration)
+        }
+
         return ddConfigBuilder.build()
+    }
+
+    func buildProxyConfiguration(config: NSDictionary?) -> [AnyHashable: Any]? {
+        guard let address = config?["_dd.proxy.address"] as? String else {
+            return nil
+        }
+
+        var proxy: [AnyHashable: Any] = [:]
+        proxy[kCFProxyUsernameKey] = config?["_dd.proxy.username"]
+        proxy[kCFProxyPasswordKey] = config?["_dd.proxy.password"]
+
+        let type = config?["_dd.proxy.type"] as? String
+        var port = config?["_dd.proxy.port"] as? Int
+        if let string = config?["_dd.proxy.port"] as? String {
+            port = Int(string)
+        }
+
+        switch type {
+        case "http", "https":
+            // CFNetwork support HTTP and tunneling HTTPS proxies.
+            // As intakes will most likely be https, we enable both channels.
+            //
+            // We use constants string keys because there is an issue with
+            // cross-platform availability for proxy configuration symbols.
+            // see. https://developer.apple.com/forums/thread/19356?answerId=131709022#131709022
+            proxy["HTTPEnable"] = 1
+            proxy["HTTPProxy"] = address
+            proxy["HTTPPort"] = port
+            proxy["HTTPSEnable"] = 1
+            proxy["HTTPSProxy"] = address
+            proxy["HTTPSPort"] = port
+        case "socks":
+            proxy["SOCKSEnable"] = 1
+            proxy["SOCKSProxy"] = address
+            proxy["SOCKSPort"] = port
+        default:
+            break
+        }
+
+        return proxy
     }
 
     func buildTrackingConsent(consent: NSString?) -> TrackingConsent {
