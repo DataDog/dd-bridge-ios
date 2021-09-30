@@ -57,14 +57,18 @@ internal class DdSdkImplementation: DdSdk {
         }
 
         switch configuration.site?.lowercased ?? "us" {
-        case "us":
-            _ = ddConfigBuilder.set(endpoint: .us)
-        case "eu":
-            _ = ddConfigBuilder.set(endpoint: .eu)
-        case "gov":
-            _ = ddConfigBuilder.set(endpoint: .gov)
+        case "us1", "us":
+            _ = ddConfigBuilder.set(endpoint: .us1)
+        case "eu1", "eu":
+            _ = ddConfigBuilder.set(endpoint: .eu1)
+        case "us3":
+            _ = ddConfigBuilder.set(endpoint: .us3)
+        case "us5":
+            _ = ddConfigBuilder.set(endpoint: .us5)
+        case "us1_fed", "gov":
+            _ = ddConfigBuilder.set(endpoint: .us1_fed)
         default:
-            _ = ddConfigBuilder.set(endpoint: .us)
+            _ = ddConfigBuilder.set(endpoint: .us1)
         }
 
         let additionalConfig = configuration.additionalConfig
