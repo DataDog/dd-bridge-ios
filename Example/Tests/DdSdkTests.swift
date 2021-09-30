@@ -9,8 +9,6 @@ import XCTest
 @testable import Datadog
 
 internal class DdSdkTests: XCTestCase {
-    private let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
-
     func testSDKInitialization() {
         let originalConsolePrint = consolePrint
         defer { consolePrint = originalConsolePrint }
@@ -18,11 +16,11 @@ internal class DdSdkTests: XCTestCase {
         var printedMessage = ""
         consolePrint = { msg in printedMessage += msg }
 
-        DdSdkImplementation().initialize(configuration: validConfiguration)
+        DdSdkImplementation().initialize(configuration: .mockAny())
 
         XCTAssertEqual(printedMessage, "")
 
-        DdSdkImplementation().initialize(configuration: validConfiguration)
+        DdSdkImplementation().initialize(configuration: .mockAny())
 
         XCTAssertEqual(printedMessage, "🔥 Datadog SDK usage error: SDK is already initialized.🔥 Datadog SDK usage error: The `RUMMonitor` instance was already created. Use existing `Global.rum` instead of initializing the `RUMMonitor` another time.")
 
@@ -30,7 +28,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationNoUIKitByDefault() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+        let configuration: DdSdkConfiguration = .mockAny()
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -38,7 +36,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUIKitTrackingDisabled() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.native_view_tracking": false])
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.native_view_tracking": false])
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -46,7 +44,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUIKitTrackingEnabled() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.native_view_tracking": true])
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.native_view_tracking": true])
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -54,7 +52,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityDebug() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "debug"])
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.sdk_verbosity": "debug"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -64,7 +62,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityInfo() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "info"])
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.sdk_verbosity": "info"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -74,7 +72,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityWarn() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "warn"])
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.sdk_verbosity": "warn"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -84,7 +82,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityError() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "error"])
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.sdk_verbosity": "error"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -94,7 +92,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityNil() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: nil)
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -104,7 +102,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testSDKInitializationWithVerbosityUnknown() {
-        let validConfiguration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.sdk_verbosity": "foo"])
+        let validConfiguration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.sdk_verbosity": "foo"])
 
         DdSdkImplementation().initialize(configuration: validConfiguration)
 
@@ -114,16 +112,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationDefaultEndpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: nil,
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny()
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -131,16 +120,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUSEndpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "US",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "US")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -148,16 +128,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUS1Endpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "US1",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "US1")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -165,16 +136,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUS3Endpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "US3",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "US3")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -182,16 +144,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUS5Endpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "US5",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "US5")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -199,16 +152,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationUS1FEDEndpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "US1_FED",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "US1_FED")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -216,16 +160,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationGOVEndpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "GOV",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "GOV")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -233,16 +168,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationEUEndpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "EU",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "EU")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -250,16 +176,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationEU1Endpoint() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: "EU1",
-            trackingConsent: "pending",
-            additionalConfig: nil
-        )
+        let configuration: DdSdkConfiguration = .mockAny(site: "EU1")
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -267,7 +184,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationAdditionalConfig() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["foo": "test", "bar": 42])
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["foo": "test", "bar": 42])
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -278,7 +195,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationWithNilServiceNameByDefault() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: nil)
+        let configuration: DdSdkConfiguration = .mockAny()
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -286,7 +203,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildConfigurationWithServiceName() {
-        let configuration = DdSdkConfiguration(clientToken: "client-token", env: "env", applicationId: "app-id", nativeCrashReportEnabled: true, sampleRate: 75.0, site: nil, trackingConsent: "pending", additionalConfig: ["_dd.service_name": "com.example.app"])
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.service_name": "com.example.app"])
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -295,7 +212,7 @@ internal class DdSdkTests: XCTestCase {
 
     func testSettingUserInfo() throws {
         let bridge = DdSdkImplementation()
-        bridge.initialize(configuration: validConfiguration)
+        bridge.initialize(configuration: .mockAny())
 
         bridge.setUser(
             user: NSDictionary(
@@ -323,7 +240,7 @@ internal class DdSdkTests: XCTestCase {
 
     func testSettingAttributes() {
         let bridge = DdSdkImplementation()
-        bridge.initialize(configuration: validConfiguration)
+        bridge.initialize(configuration: .mockAny())
 
         let rumMonitorMock = MockRUMMonitor()
         Global.rum = rumMonitorMock
@@ -379,16 +296,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testBuildLongTaskThreshold() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: nil,
-            trackingConsent: "pending",
-            additionalConfig: ["_dd.long_task.threshold": 2_500]
-        )
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.long_task.threshold": 2_500])
 
         let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
 
@@ -438,14 +346,7 @@ internal class DdSdkTests: XCTestCase {
     }
 
     func testProxyConfiguration() {
-        let configuration = DdSdkConfiguration(
-            clientToken: "client-token",
-            env: "env",
-            applicationId: "app-id",
-            nativeCrashReportEnabled: true,
-            sampleRate: 75.0,
-            site: nil,
-            trackingConsent: "pending",
+        let configuration: DdSdkConfiguration = .mockAny(
             additionalConfig: [
                 "_dd.proxy.address": "host",
                 "_dd.proxy.port": 99,
@@ -469,5 +370,29 @@ private class MockRUMMonitor: DDRUMMonitor {
 
     override func addAttribute(forKey key: AttributeKey, value: AttributeValue) {
         receivedAttributes[key] = value
+    }
+}
+
+extension DdSdkConfiguration {
+    static func mockAny(
+        clientToken: NSString = "client-token",
+        env: NSString = "env",
+        applicationId: NSString = "app-id",
+        nativeCrashReportEnabled: Bool = true,
+        sampleRate: Double = 75.0,
+        site: NSString? = nil,
+        trackingConsent: NSString = "pending",
+        additionalConfig: NSDictionary? = nil
+    ) -> DdSdkConfiguration {
+        DdSdkConfiguration(
+            clientToken: clientToken,
+            env: env,
+            applicationId: applicationId,
+            nativeCrashReportEnabled: nativeCrashReportEnabled,
+            sampleRate: sampleRate,
+            site: site,
+            trackingConsent: trackingConsent,
+            additionalConfig: additionalConfig
+        )
     }
 }
