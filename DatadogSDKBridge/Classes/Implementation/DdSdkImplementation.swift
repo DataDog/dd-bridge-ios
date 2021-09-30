@@ -81,6 +81,11 @@ internal class DdSdkImplementation: DdSdk {
             _ = ddConfigBuilder.set(serviceName: serviceName)
         }
 
+        if let threshold = additionalConfig?["_dd.long_task.threshold"] as? TimeInterval {
+            // `_dd.long_task.threshold` attribute is in milliseconds
+            _ = ddConfigBuilder.trackRUMLongTasks(threshold: threshold / 1_000)
+        }
+
         if let proxyConfiguration = buildProxyConfiguration(config: additionalConfig) {
             _ = ddConfigBuilder.set(proxyConfiguration: proxyConfiguration)
         }
