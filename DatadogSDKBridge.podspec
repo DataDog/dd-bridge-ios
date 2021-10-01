@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'DatadogSDKBridge'
-  s.version          = '0.4.6'
+  s.version          = '0.4.7'
   s.summary          = 'Datadog iOS SDK Bridge for cross-platform integrations.'
 
   s.homepage         = 'https://github.com/DataDog/dd-bridge-ios'
