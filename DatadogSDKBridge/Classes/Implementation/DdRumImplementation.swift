@@ -96,6 +96,8 @@ internal class DdRumImplementation: DdRum {
     internal static let firstByteTimingKey = "firstByte"
     internal static let downloadTimingKey = "download"
 
+    internal static let missingResourceSize = -1
+
     lazy var nativeRUM: NativeRUM = rumProvider()
     private let rumProvider: () -> NativeRUM
 
@@ -151,7 +153,7 @@ internal class DdRumImplementation: DdRum {
             resourceKey: key as String,
             statusCode: Int(statusCode),
             kind: RUMResourceType(from: kind as String),
-            size: nil,
+            size: size == Self.missingResourceSize ? nil : size,
             attributes: attributes(from: mutableContext, with: timestampMs)
         )
     }
@@ -191,6 +193,8 @@ internal class DdRumImplementation: DdRum {
                 ssl: ssl,
                 firstByte: firstByte,
                 download: download,
+                // no need to define the size here, because if it is missing,
+                // it will be taken from the command
                 responseSize: nil,
                 attributes: [:]
             )

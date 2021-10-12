@@ -119,10 +119,22 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStopResource() throws {
-        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", context: ["foo": 123], timestampMs: randomTimestamp)
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: 1_337, context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: 1_337))
+        XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+    }
+
+    func testStopResourceWithMissingSize() throws {
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: -1, context: ["foo": 123], timestampMs: randomTimestamp)
+
+        XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: nil))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
         let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
         XCTAssertEqual(lastAttributes.count, 2)
@@ -165,7 +177,7 @@ internal class DdRumTests: XCTestCase {
             ]
         ]
 
-        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", timestampMs: randomTimestamp, context: context)
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: 1_337, context: context, timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 2)
 
@@ -205,7 +217,7 @@ internal class DdRumTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: 1_337))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 2)
         let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
         XCTAssertEqual(lastAttributes.count, 2)
@@ -257,7 +269,7 @@ private class MockNativeRUM: NativeRUM {
         case stopView(key: String)
         case addError(message: String, source: RUMErrorSource, stack: String?)
         case startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String)
-        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: RUMResourceType)
+        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: RUMResourceType, size: Int64?)
         case startUserAction(type: RUMUserActionType, name: String)
         case stopUserAction(type: RUMUserActionType, name: String?)
         case addUserAction(type: RUMUserActionType, name: String)
@@ -295,7 +307,7 @@ private class MockNativeRUM: NativeRUM {
         receivedAttributes.append(attributes)
     }
     func stopResourceLoading(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [String: Encodable]) {
-        calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode ?? 0, kind: kind))
+        calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode ?? 0, kind: kind, size: size))
         receivedAttributes.append(attributes)
     }
     func startUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable]) {
