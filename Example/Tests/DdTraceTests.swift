@@ -42,7 +42,7 @@ internal class DdTraceTests: XCTestCase {
         }
 
         // When
-        (0..<10).forEach { _ in _ = tracer.startSpan(operation: "foo", timestampMs: 1_337, context: [:]) }
+        (0..<10).forEach { _ in _ = tracer.startSpan(operation: "foo", context: [:], timestampMs: 1_337) }
 
         // Then
         waitForExpectations(timeout: 0.5, handler: nil)
@@ -52,8 +52,8 @@ internal class DdTraceTests: XCTestCase {
         let timestampInMilliseconds = Date.timeIntervalBetween1970AndReferenceDate * 1_000
         let spanID = tracer.startSpan(
             operation: "test_span",
-            timestampMs: Int64(timestampInMilliseconds),
-            context: testTags
+            context: testTags,
+            timestampMs: Int64(timestampInMilliseconds)
         )
 
         XCTAssertNotNil(spanID)
@@ -76,8 +76,8 @@ internal class DdTraceTests: XCTestCase {
         let timestampMs = Int64(startDate.timeIntervalSince1970 * 1_000)
         let spanID = tracer.startSpan(
             operation: "test_span",
-            timestampMs: timestampMs,
-            context: testTags
+            context: testTags,
+            timestampMs: timestampMs
         )
 
         XCTAssertEqual(Array(tracer.spanDictionary.keys), [spanID])
@@ -88,7 +88,7 @@ internal class DdTraceTests: XCTestCase {
         let spanDurationMs = Int64(spanDuration * 1_000)
         let finishTimestampMs = timestampMs + spanDurationMs
         let finishingContext = NSDictionary(dictionary: ["last_key": "last_value"])
-        tracer.finishSpan(spanId: spanID, timestampMs: finishTimestampMs, context: finishingContext)
+        tracer.finishSpan(spanId: spanID, context: finishingContext, timestampMs: finishTimestampMs)
 
         XCTAssertEqual(Array(tracer.spanDictionary.keys), [])
         XCTAssertEqual(
@@ -105,8 +105,8 @@ internal class DdTraceTests: XCTestCase {
     func testFinishingInexistentSpan() {
         _ = tracer.startSpan(
             operation: "test_span",
-            timestampMs: 100,
-            context: NSDictionary()
+            context: NSDictionary(),
+            timestampMs: 100
         )
 
         XCTAssertEqual(tracer.spanDictionary.count, 1)
@@ -114,8 +114,8 @@ internal class DdTraceTests: XCTestCase {
         XCTAssertNoThrow(
             tracer.finishSpan(
                 spanId: "inexistent_test_span_id",
-                timestampMs: 0,
-                context: NSDictionary()
+                context: NSDictionary(),
+                timestampMs: 0
             )
         )
 
@@ -127,10 +127,10 @@ internal class DdTraceTests: XCTestCase {
         DispatchQueue.concurrentPerform(iterations: iterationCount) { iteration in
             let spanID = tracer.startSpan(
                 operation: "concurrent_test_span_\(iteration)" as NSString,
-                timestampMs: 0,
-                context: testTags
+                context: testTags,
+                timestampMs: 0
             )
-            tracer.finishSpan(spanId: spanID, timestampMs: 100, context: testTags)
+            tracer.finishSpan(spanId: spanID, context: testTags, timestampMs: 100)
         }
 
         XCTAssertEqual(mockNativeTracer.startedSpans.count, iterationCount, "\(mockNativeTracer.startedSpans)")

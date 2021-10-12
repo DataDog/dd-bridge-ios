@@ -110,36 +110,36 @@ internal class DdRumImplementation: DdRum {
         self.init { Global.rum }
     }
 
-    func startView(key: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
+    func startView(key: NSString, name: NSString, context: NSDictionary, timestampMs: Int64) {
         nativeRUM.startView(key: key as String, name: name as String, attributes: attributes(from: context, with: timestampMs))
     }
 
-    func stopView(key: NSString, timestampMs: Int64, context: NSDictionary) {
+    func stopView(key: NSString, context: NSDictionary, timestampMs: Int64) {
         nativeRUM.stopView(key: key as String, attributes: attributes(from: context, with: timestampMs))
     }
 
-    func startAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
+    func startAction(type: NSString, name: NSString, context: NSDictionary, timestampMs: Int64) {
         let actionType = RUMUserActionType(from: type as String)
         nativeRUM.startUserAction(type: actionType, name: name as String, attributes: attributes(from: context, with: timestampMs))
         ongoingUserActions.append((type: actionType, name: name as String))
     }
 
-    func stopAction(timestampMs: Int64, context: NSDictionary) {
+    func stopAction(context: NSDictionary, timestampMs: Int64) {
         guard let userAction = ongoingUserActions.popLast() else {
             return
         }
         nativeRUM.stopUserAction(type: userAction.type, name: userAction.name, attributes: attributes(from: context, with: timestampMs))
     }
 
-    func addAction(type: NSString, name: NSString, timestampMs: Int64, context: NSDictionary) {
+    func addAction(type: NSString, name: NSString, context: NSDictionary, timestampMs: Int64) {
         nativeRUM.addUserAction(type: RUMUserActionType(from: type as String), name: name as String, attributes: attributes(from: context, with: timestampMs))
     }
 
-    func startResource(key: NSString, method: NSString, url: NSString, timestampMs: Int64, context: NSDictionary) {
+    func startResource(key: NSString, method: NSString, url: NSString, context: NSDictionary, timestampMs: Int64) {
         nativeRUM.startResourceLoading(resourceKey: key as String, httpMethod: RUMMethod(from: method as String), urlString: url as String, attributes: attributes(from: context, with: timestampMs))
     }
 
-    func stopResource(key: NSString, statusCode: Int64, kind: NSString, timestampMs: Int64, context: NSDictionary) {
+    func stopResource(key: NSString, statusCode: Int64, kind: NSString, size: Int64, context: NSDictionary, timestampMs: Int64) {
         let mutableContext = NSMutableDictionary(dictionary: context)
         if let resourceTimings = mutableContext.object(forKey: Self.resourceTimingsKey) as? [String: Any] {
             mutableContext.removeObject(forKey: Self.resourceTimingsKey)
@@ -156,7 +156,7 @@ internal class DdRumImplementation: DdRum {
         )
     }
 
-    func addError(message: NSString, source: NSString, stacktrace: NSString, timestampMs: Int64, context: NSDictionary) {
+    func addError(message: NSString, source: NSString, stacktrace: NSString, context: NSDictionary, timestampMs: Int64) {
         nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
     }
 
