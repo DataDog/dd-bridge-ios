@@ -40,7 +40,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStartView() throws {
-        rum.startView(key: "view key", name: "view name", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.startView(key: "view key", name: "view name", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startView(key: "view key", name: "view name"))
@@ -52,7 +52,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStopView() throws {
-        rum.stopView(key: "view key", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.stopView(key: "view key", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopView(key: "view key"))
@@ -64,7 +64,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStartAction() throws {
-        rum.startAction(type: "custom", name: "action name", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.startAction(type: "custom", name: "action name", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startUserAction(type: .custom, name: "action name"))
@@ -76,14 +76,14 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStopActionWithoutStarting() {
-        rum.stopAction(timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.stopAction(context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 0)
     }
 
     func testStopAction() throws {
-        rum.startAction(type: "custom", name: "action name", timestampMs: 0, context: [:])
-        rum.stopAction(timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.startAction(type: "custom", name: "action name", context: [:], timestampMs: 0)
+        rum.stopAction(context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 2)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopUserAction(type: .custom, name: "action name"))
@@ -95,7 +95,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testAddAction() throws {
-        rum.addAction(type: "scroll", name: "action name", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.addAction(type: "scroll", name: "action name", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .addUserAction(type: .scroll, name: "action name"))
@@ -107,7 +107,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStartResource() throws {
-        rum.startResource(key: "resource key", method: "put", url: "some/url/string", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.startResource(key: "resource key", method: "put", url: "some/url/string", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .startResourceLoading(resourceKey: "resource key", httpMethod: .put, urlString: "some/url/string"))
@@ -119,10 +119,22 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testStopResource() throws {
-        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: 1_337, context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: 1_337))
+        XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
+        let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
+        XCTAssertEqual(lastAttributes.count, 2)
+        XCTAssertEqual(lastAttributes["foo"] as? Int64, 123)
+        XCTAssertEqual(lastAttributes[DdRumImplementation.timestampKey] as? Int64, randomTimestamp)
+    }
+
+    func testStopResourceWithMissingSize() throws {
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: -1, context: ["foo": 123], timestampMs: randomTimestamp)
+
+        XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: nil))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 1)
         let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
         XCTAssertEqual(lastAttributes.count, 2)
@@ -165,7 +177,7 @@ internal class DdRumTests: XCTestCase {
             ]
         ]
 
-        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", timestampMs: randomTimestamp, context: context)
+        rum.stopResource(key: "resource key", statusCode: 999, kind: "xhr", size: 1_337, context: context, timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 2)
 
@@ -205,7 +217,7 @@ internal class DdRumTests: XCTestCase {
             )
         )
 
-        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr))
+        XCTAssertEqual(mockNativeRUM.calledMethods.last, .stopResourceLoading(resourceKey: "resource key", statusCode: 999, kind: .xhr, size: 1_337))
         XCTAssertEqual(mockNativeRUM.receivedAttributes.count, 2)
         let lastAttributes = try XCTUnwrap(mockNativeRUM.receivedAttributes.last)
         XCTAssertEqual(lastAttributes.count, 2)
@@ -214,7 +226,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testAddError() throws {
-        rum.addError(message: "error message", source: "webview", stacktrace: "error trace", timestampMs: randomTimestamp, context: ["foo": 123])
+        rum.addError(message: "error message", source: "webview", stacktrace: "error trace", context: ["foo": 123], timestampMs: randomTimestamp)
 
         XCTAssertEqual(mockNativeRUM.calledMethods.count, 1)
         XCTAssertEqual(mockNativeRUM.calledMethods.last, .addError(message: "error message", source: .webview, stack: "error trace"))
@@ -257,7 +269,7 @@ private class MockNativeRUM: NativeRUM {
         case stopView(key: String)
         case addError(message: String, source: RUMErrorSource, stack: String?)
         case startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String)
-        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: RUMResourceType)
+        case stopResourceLoading(resourceKey: String, statusCode: Int, kind: RUMResourceType, size: Int64?)
         case startUserAction(type: RUMUserActionType, name: String)
         case stopUserAction(type: RUMUserActionType, name: String?)
         case addUserAction(type: RUMUserActionType, name: String)
@@ -295,7 +307,7 @@ private class MockNativeRUM: NativeRUM {
         receivedAttributes.append(attributes)
     }
     func stopResourceLoading(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [String: Encodable]) {
-        calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode ?? 0, kind: kind))
+        calledMethods.append(.stopResourceLoading(resourceKey: resourceKey, statusCode: statusCode ?? 0, kind: kind, size: size))
         receivedAttributes.append(attributes)
     }
     func startUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable]) {

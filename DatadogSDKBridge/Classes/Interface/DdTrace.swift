@@ -14,10 +14,10 @@ public protocol DdTrace {
     /**
        Start a span, and returns a unique identifier for the span.
      */
-    func startSpan(operation: NSString, timestampMs: Int64, context: NSDictionary) -> NSString
+    func startSpan(operation: NSString, context: NSDictionary, timestampMs: Int64) -> NSString
 
     /**
        Finish a started span.
      */
-    func finishSpan(spanId: NSString, timestampMs: Int64, context: NSDictionary)
+    func finishSpan(spanId: NSString, context: NSDictionary, timestampMs: Int64)
 }
