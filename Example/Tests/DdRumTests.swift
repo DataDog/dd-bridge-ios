@@ -36,7 +36,7 @@ internal class DdRumTests: XCTestCase {
     }
 
     func testInternalTimestampKeyValue() {
-        XCTAssertEqual(DdRumImplementation.timestampKey, RUMAttribute.internalTimestamp)
+        XCTAssertEqual(DdRumImplementation.timestampKey, CrossPlatformAttributes.timestampInMilliseconds)
     }
 
     func testStartView() throws {
