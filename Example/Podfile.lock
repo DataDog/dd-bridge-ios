@@ -1,6 +1,6 @@
 PODS:
   - DatadogSDK (1.9.0)
-  - DatadogSDKBridge (0.5.1):
+  - DatadogSDKBridge (0.5.2):
     - DatadogSDK (~> 1.9.0)
 
 DEPENDENCIES:
@@ -16,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   DatadogSDK: 8fbd60a904489d4f930173b9723d6bb381c13920
-  DatadogSDKBridge: dc9b887ffab3f04ee850e06aa156874e4683b2ca
+  DatadogSDKBridge: d39c5911dd310fb3e67c551b8b39cb6278c5cfe0
 
 PODFILE CHECKSUM: 0f230940dcc6685e1c6b3c7b34b7b2c618993c36
 
