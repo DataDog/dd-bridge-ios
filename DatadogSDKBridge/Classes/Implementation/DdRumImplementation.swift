@@ -11,7 +11,7 @@ extension DDRUMMonitor: NativeRUM { }
 internal protocol NativeRUM {
     func startView(key: String, name: String?, attributes: [String: Encodable])
     func stopView(key: String, attributes: [String: Encodable])
-    func addError(message: String, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?)
+    func addError(message: String, type: String?, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?)
     func startResourceLoading(resourceKey: String, httpMethod: RUMMethod, urlString: String, attributes: [String: Encodable])
     func stopResourceLoading(resourceKey: String, statusCode: Int?, kind: RUMResourceType, size: Int64?, attributes: [String: Encodable])
     func startUserAction(type: RUMUserActionType, name: String, attributes: [String: Encodable])
@@ -159,7 +159,7 @@ internal class DdRumImplementation: DdRum {
     }
 
     func addError(message: NSString, source: NSString, stacktrace: NSString, context: NSDictionary, timestampMs: Int64) {
-        nativeRUM.addError(message: message as String, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
+        nativeRUM.addError(message: message as String, type: nil, source: RUMErrorSource(from: source as String), stack: stacktrace as String, attributes: attributes(from: context, with: timestampMs), file: nil, line: nil)
     }
 
     func addTiming(name: NSString) {
