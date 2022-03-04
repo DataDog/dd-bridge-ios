@@ -297,7 +297,7 @@ private class MockNativeRUM: NativeRUM {
         calledMethods.append(.stopView(key: key))
         receivedAttributes.append(attributes)
     }
-    func addError(message: String, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?) {
+    func addError(message: String, type: String?, source: RUMErrorSource, stack: String?, attributes: [String: Encodable], file: StaticString?, line: UInt?) {
         calledMethods.append(.addError(message: message, source: source, stack: stack))
         receivedAttributes.append(attributes)
     }
