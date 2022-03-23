@@ -194,12 +194,10 @@
 			inputPaths = (
 				"${PODS_ROOT}/Target Support Files/Pods-DatadogSDKBridge_Tests/Pods-DatadogSDKBridge_Tests-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/DatadogSDK/Datadog.framework",
-				"${BUILT_PRODUCTS_DIR}/DatadogSDKBridge/DatadogSDKBridge.framework",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Datadog.framework",
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/DatadogSDKBridge.framework",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
