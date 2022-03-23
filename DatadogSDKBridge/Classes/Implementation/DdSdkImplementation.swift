@@ -6,6 +6,7 @@
 
 import Foundation
 import Datadog
+import DatadogCrashReporting
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
@@ -92,6 +93,10 @@ internal class DdSdkImplementation: DdSdk {
 
         if let proxyConfiguration = buildProxyConfiguration(config: additionalConfig) {
             _ = ddConfigBuilder.set(proxyConfiguration: proxyConfiguration)
+        }
+
+        if configuration.nativeCrashReportEnabled ?? false {
+            _ = ddConfigBuilder.enableCrashReporting(using: DDCrashReportingPlugin())
         }
 
         return ddConfigBuilder.build()

@@ -210,6 +210,32 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(ddConfig.serviceName, "com.example.app")
     }
 
+    func testBuildConfigurationNoCrashReportByDefault() {
+        let configuration: DdSdkConfiguration = .mockAny(nativeCrashReportEnabled: nil)
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNil(ddConfig.crashReportingPlugin)
+    }
+
+    func testBuildConfigurationNoCrashReport() {
+        let configuration: DdSdkConfiguration = .mockAny(nativeCrashReportEnabled: false)
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNil(ddConfig.crashReportingPlugin)
+    }
+
+    func testBuildConfigurationWithCrashReport() {
+        let configuration: DdSdkConfiguration = .mockAny(
+            nativeCrashReportEnabled: true
+        )
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertNotNil(ddConfig.crashReportingPlugin)
+    }
+
     func testSettingUserInfo() throws {
         let bridge = DdSdkImplementation()
         bridge.initialize(configuration: .mockAny())
@@ -378,7 +404,7 @@ extension DdSdkConfiguration {
         clientToken: NSString = "client-token",
         env: NSString = "env",
         applicationId: NSString = "app-id",
-        nativeCrashReportEnabled: Bool = true,
+        nativeCrashReportEnabled: Bool? = nil,
         sampleRate: Double = 75.0,
         site: NSString? = nil,
         trackingConsent: NSString = "pending",
