@@ -1,6 +1,6 @@
 PODS:
   - DatadogSDK (1.9.0)
-  - DatadogSDKBridge (0.5.2):
+  - DatadogSDKBridge (0.5.3):
     - DatadogSDK (~> 1.9.0)
     - DatadogSDKCrashReporting (~> 1.9.0)
   - DatadogSDKCrashReporting (1.9.0):
@@ -23,7 +23,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   DatadogSDK: 8fbd60a904489d4f930173b9723d6bb381c13920
-  DatadogSDKBridge: 18dc151c532fbc2411cb079f0eeaf764b0b1b2fb
+  DatadogSDKBridge: d05d291bfd54c3e0135f3f8e82694391449c918d
   DatadogSDKCrashReporting: 684346cb6cc9957f6e428558ef2245469910f16e
   PLCrashReporter: b30195e509f07299ea277d1997b3a39449d05698
 
