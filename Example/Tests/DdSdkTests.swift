@@ -329,6 +329,14 @@ internal class DdSdkTests: XCTestCase {
         XCTAssertEqual(ddConfig.rumLongTaskDurationThreshold, 2.5)
     }
 
+    func testBuildFirstPartyHosts() {
+        let configuration: DdSdkConfiguration = .mockAny(additionalConfig: ["_dd.first_party_hosts": ["example.com", "datadog.com"]])
+
+        let ddConfig = DdSdkImplementation().buildConfiguration(configuration: configuration)
+
+        XCTAssertEqual(ddConfig.firstPartyHosts, ["example.com", "datadog.com"])
+    }
+
     func testBuildProxyConfiguration() {
         let configuration: NSMutableDictionary = [
             "_dd.proxy.address": "host",
