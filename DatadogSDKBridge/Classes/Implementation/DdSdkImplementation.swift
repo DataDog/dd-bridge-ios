@@ -91,6 +91,10 @@ internal class DdSdkImplementation: DdSdk {
             _ = ddConfigBuilder.trackRUMLongTasks(threshold: threshold / 1_000)
         }
 
+        if let firstPartyHosts = additionalConfig?["_dd.first_party_hosts"] as? [String] {
+            _ = ddConfigBuilder.trackURLSession(firstPartyHosts: Set(firstPartyHosts))
+        }
+
         if let proxyConfiguration = buildProxyConfiguration(config: additionalConfig) {
             _ = ddConfigBuilder.set(proxyConfiguration: proxyConfiguration)
         }
