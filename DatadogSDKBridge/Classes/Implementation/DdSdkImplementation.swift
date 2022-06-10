@@ -10,6 +10,12 @@ import DatadogCrashReporting
 
 internal class DdSdkImplementation: DdSdk {
     func initialize(configuration: DdSdkConfiguration) {
+        if Datadog.isInitialized {
+            // Initializing the SDK twice results in Global.rum and
+            // Global.sharedTracer to be set to no-op instances
+            consolePrint("Datadog SDK is already initialized, skipping initialization.")
+            return
+        }
         setVerbosityLevel(additionalConfig: configuration.additionalConfig)
 
         let ddConfig = buildConfiguration(configuration: configuration)
