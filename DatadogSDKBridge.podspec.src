@@ -19,6 +19,6 @@ Pod::Spec.new do |s|
   s.source_files = 'DatadogSDKBridge/Classes/**/*'
 
   s.static_framework = true
-  s.dependency 'DatadogSDK', '~> 1.11.0-rc1'
-  s.dependency 'DatadogSDKCrashReporting', '~> 1.11.0-rc1'
+  s.dependency 'DatadogSDK', '~> 1.11.0'
+  s.dependency 'DatadogSDKCrashReporting', '~> 1.11.0'
 end
